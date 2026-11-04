@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { WorkspaceIcon } from '../../components/common/WorkspaceIcon';
 import { StatusMessage } from '../../components/common/StatusMessage';
 import { hasDemoSession, signIn } from './authService';
 
@@ -32,6 +33,10 @@ export function LoginPage() {
   return (
     <main className="login-page">
       <section className="login-card" aria-labelledby="login-title">
+        <div className="login-brand">
+          <WorkspaceIcon kind="overview" />
+          <span>همتایار</span>
+        </div>
         <p className="eyebrow">محیط آزمایشی</p>
         <h1 id="login-title">ورود به دموی همتایار</h1>
         <p className="login-card__description">

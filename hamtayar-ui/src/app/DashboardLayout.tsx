@@ -15,7 +15,7 @@ export function DashboardLayout() {
       <aside className="sidebar" aria-label="پیمایش اصلی">
         <div className="dashboard-brand">
           <span className="dashboard-brand__mark">
-            <WorkspaceIcon kind="code" />
+            <WorkspaceIcon kind="overview" />
           </span>
           <div>
             <strong>همتایار</strong>

@@ -66,3 +66,27 @@ clear/navigation, empty-list guidance and logout reset. This remains a Demo/sess
 registry and does not establish backend storage or permission enforcement.
 Format, lint, TypeScript and production build pass. Browser visual/live API checks
 remain unverified as described above.
+
+## Latest formal theme and typography revision — 2026-11-04
+
+This entry supersedes the earlier main-UI browser-runtime blocker. A working
+Chromium 134 headless shell was installed and used through Playwright.
+
+| Browser check                       | Result                                                                                                               |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Login at 1366×768                   | Screenshot reviewed; first Tab focuses username; bundled Vazirmatn loads                                             |
+| Overview at 1366×768 and 390px      | Screenshots reviewed; no page-level horizontal overflow                                                              |
+| Document form at 1366×768 and 390px | Long PDF name, required center/classification and successful Demo registration exercised; no page-level overflow     |
+| Q&A at 1366×768 and 390px           | Registered center and access-level selects, question submission and fixture result exercised; no page-level overflow |
+| Font/network                        | Actual Vazirmatn loaded; zero external HTTP requests during Demo browser flow                                        |
+| Runtime                             | Zero browser page errors in the exercised flow                                                                       |
+
+The main palette uses white cards, a light neutral canvas and navy navigation/hero
+for continuity with the separate code workspace. Fontsource supplies locally served
+Vazirmatn 400/500/600/700 fonts with swap behavior. No Google Fonts request is used
+by the main UI. Screenshots were inspected at desktop and mobile widths.
+
+53 tests across 14 files, formatting, lint, strict TypeScript and production build
+pass. CGC's two branding files were checked for the requested visible/browser/footer
+labels and its TSX parsed successfully with esbuild; no full CGC runtime or backend
+validation was performed. This is a branding-only edit to that frontend.

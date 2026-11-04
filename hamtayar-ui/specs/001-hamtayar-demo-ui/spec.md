@@ -267,3 +267,15 @@ or reload with other session-only demo data. Do not infer a backend registration
 Access level maps to document_type equality in the intended UI query; do not infer
 permission hierarchy, trust user-entered scope or claim real filtered retrieval.
 The document_type filter control is not separately rendered in the prompt.
+
+## Approved typography and identity revision — 2026-11-04
+
+The later user request replaces exact visual matching with a formal, independent
+main Hamtayar identity that remains compatible with the code workspace: light cool
+canvas, white surfaces, navy sidebar/hero, restrained blue accents and readable
+Persian typography. Bundle Vazirmatn 400/500/600/700 locally via Fontsource rather
+than relying on a font name or remote font stylesheet.
+
+The user also explicitly authorizes a narrowly scoped frontend branding edit to
+CGC/HamtayarDemo: its visible brand, browser title and footer must say همتایار کد.
+No CGC workflow, backend, credentials or endpoint behavior changes are included.

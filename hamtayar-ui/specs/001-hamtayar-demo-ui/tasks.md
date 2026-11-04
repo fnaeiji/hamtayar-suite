@@ -262,3 +262,14 @@ All API controls remain disabled; no connected-and-tested claim is made.
 - [X] R008 Use shared classification choices عادی / محرمانه / خیلی محرمانه for document type and prompt access level.
 - [X] R009 Populate the prompt center combobox only from successful session Demo registrations, deduplicate names, exclude failed drafts and clear on logout/mode change.
 - [X] R010 Show exactly center/access-level prompt controls; map access level to intended document_type equality and verify mapping/registration/reset behavior.
+
+## User-requested formal visual identity revision — 2026-11-04
+
+- [X] R011 Replace exact dark theme matching with a formal light main workspace, navy sidebar/hero and consistent typography, spacing, forms and cards.
+- [X] R012 Bundle Vazirmatn font weights locally and verify actual browser font loading without external requests.
+- [X] R013 Apply the user's explicitly requested «همتایار کد» title to the CGC frontend brand, browser title and footer, preserving its behavior.
+- [X] R014 Review browser screenshots at 1366×768 and 390px; exercise login, document registration and Q&A Demo, verify no page overflow/runtime errors and run all existing quality checks.
+
+The visual/browser-install blocker recorded in earlier revisions is resolved for
+the main UI in this revision. Live CGC/backend readiness and user-machine acceptance
+remain outside that evidence. See the latest entry in docs/verification.md.
