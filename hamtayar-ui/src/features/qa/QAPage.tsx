@@ -4,7 +4,8 @@ import { MetadataFields } from '../../components/metadata/MetadataFields';
 import { SafeAnswerMarkdown } from '../../components/answers/SafeAnswerMarkdown';
 import { TestDetailsPanel } from '../../components/operations/TestDetailsPanel';
 import { metadataConfigService } from '../../services/metadata/metadataConfigService';
-import { useMetadata } from '../../services/metadata/useMetadata';
+import { registeredCenters } from '../../services/metadata/registeredCenters';
+import { questionMetadataDefinitions } from '../../config/demoProfile';
 import { createWorkspaceStore } from '../../services/operations/workspaceStore';
 import { runOperation, useOperation } from '../../services/operations/operationService';
 import {
@@ -39,7 +40,8 @@ store.observe(() => {
 export function QAPage({ showMode = true }: { showMode?: boolean }) {
   const state = store.use();
   const { mode, canSwitchMode } = useMode();
-  const { definitions, warning } = useMetadata();
+  const { centers } = registeredCenters.use();
+  const definitions = questionMetadataDefinitions(centers);
   const op = useOperation<AnswerResult>('qa');
   const gate = hamtayarReadiness('qa');
   function query() {
@@ -47,7 +49,15 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
     if (!q || q.includes('\0')) throw new Error('پرسش معتبر و غیرخالی وارد کنید.');
     if (mode === 'api' && Array.from(q).length > 4096)
       throw new Error('پرسش API باید حداکثر ۴۰۹۶ نویسه باشد.');
-    return buildQuery(q, state.user, state.filters, definitions);
+    return buildQuery(
+      q,
+      state.user,
+      {
+        center: state.filters.center ?? '',
+        document_type: state.user.person_access_level ?? '',
+      },
+      definitions,
+    );
   }
   function preview() {
     try {
@@ -87,7 +97,6 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
           ? 'پاسخ و منابع ثابت و نمایشی هستند؛ فیلترها و اطلاعات کاربر روی نتیجه نمونه اعمال نمی‌شوند.'
           : 'فقط سؤال ارسال می‌شود؛ پاسخ غیرشخصی‌سازی‌شده و بدون فیلتر است.'}
       </p>
-      {warning && <p role="alert">{warning}</p>}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -104,31 +113,32 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
             onChange={(e) => store.set({ question: e.target.value, preview: undefined })}
             aria-describedby={state.error ? 'qa-error' : undefined}
           />
-          <h2>دسترسی فرد</h2>
-          <p>سطح واردشده در این دمو، مجوز واقعی ایجاد نمی‌کند.</p>
+          <h2>مرکز و سطح دسترسی</h2>
+          <p>
+            مراکزِ دارای ثبت موفق در همین نشست نمایشی قابل انتخاب‌اند. سطح دسترسی انتخابی
+            معادل نوع سند در پیش‌نمایش است؛ مجوز واقعی ایجاد نمی‌کند.
+          </p>
+          {centers.length === 0 && (
+            <p role="status">
+              هنوز سندی برای هیچ مرکزی ثبت نشده است. ابتدا یک سند را با مرکز و نوع سند در
+              بخش اسناد ثبت نمایشی کنید.
+            </p>
+          )}
+          <MetadataFields
+            definitions={definitions.filter((f) => f.key === 'center')}
+            group="document"
+            queryFilters
+            values={state.filters}
+            onChange={(key, value) =>
+              store.set({ filters: { [key]: value }, preview: undefined })
+            }
+          />
           <MetadataFields
             definitions={definitions}
             group="user"
             values={state.user}
             onChange={(key, value) =>
-              store.set({ user: { ...state.user, [key]: value }, preview: undefined })
-            }
-          />
-          <h2>محدوده اسناد</h2>
-          <p>
-            شرط‌های فیلدهای مختلف با «و» ترکیب می‌شوند؛ چند مقدار در یک فیلد یعنی «یکی
-            از».
-          </p>
-          <MetadataFields
-            definitions={definitions}
-            queryFilters
-            group="document"
-            values={state.filters}
-            onChange={(key, value) =>
-              store.set({
-                filters: { ...state.filters, [key]: value },
-                preview: undefined,
-              })
+              store.set({ user: { [key]: value }, preview: undefined })
             }
           />
           {mode === 'api' && (

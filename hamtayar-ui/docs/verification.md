@@ -55,3 +55,14 @@ their upstream formatting.
   `CGC/HamtayarDemo/frontend/src/style.css`, `README.md` and `scripts/start-dev.ps1`.
 - Browser visual checks and real HamtayarDemo navigation on the user's computer
   remain unverified; the earlier browser-runtime limitation still applies.
+
+## Latest classification revision
+
+53 tests pass across 14 files. New/updated flow coverage verifies no shared metadata
+fieldset, independent file centers, all three classification options, exactly two
+prompt metadata selects, intended document_type mapping, successful-only center
+registration, whitespace deduplication, failed-center exclusion, survival after draft
+clear/navigation, empty-list guidance and logout reset. This remains a Demo/session
+registry and does not establish backend storage or permission enforcement.
+Format, lint, TypeScript and production build pass. Browser visual/live API checks
+remain unverified as described above.

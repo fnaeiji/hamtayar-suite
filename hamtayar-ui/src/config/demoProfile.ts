@@ -2,13 +2,19 @@ import type { MetadataFieldDefinition } from '../types/metadata';
 
 // Current presentation profile: exactly two document fields and one descriptive user field.
 // This UI value is never an authorization grant or an API access scope.
+export const CLASSIFICATION_OPTIONS = [
+  { value: 'normal', labelFa: 'عادی' },
+  { value: 'confidential', labelFa: 'محرمانه' },
+  { value: 'highly_confidential', labelFa: 'خیلی محرمانه' },
+];
+
 export const DEMO_METADATA_FIELDS: MetadataFieldDefinition[] = [
   {
     key: 'center',
     labelFa: 'مرکز',
     group: 'document',
     type: 'text',
-    required: false,
+    required: true,
     enabled: true,
     visibleInForm: true,
     filterable: true,
@@ -18,23 +24,35 @@ export const DEMO_METADATA_FIELDS: MetadataFieldDefinition[] = [
     labelFa: 'نوع سند',
     group: 'document',
     type: 'select',
-    options: [
-      { value: 'guide', labelFa: 'راهنما' },
-      { value: 'report', labelFa: 'گزارش' },
-      { value: 'policy', labelFa: 'آیین‌نامه' },
-    ],
-    required: false,
+    options: CLASSIFICATION_OPTIONS,
+    required: true,
     enabled: true,
     visibleInForm: true,
     filterable: true,
   },
   {
     key: 'person_access_level',
-    labelFa: 'سطح دسترسی فرد',
+    labelFa: 'سطح دسترسی',
     group: 'user',
-    type: 'text',
+    type: 'select',
+    options: CLASSIFICATION_OPTIONS,
     required: false,
     enabled: true,
     visibleInForm: true,
   },
 ];
+
+export function questionMetadataDefinitions(
+  centers: string[],
+): MetadataFieldDefinition[] {
+  return DEMO_METADATA_FIELDS.map((field) =>
+    field.key === 'center'
+      ? {
+          ...field,
+          type: 'select' as const,
+          required: false,
+          options: centers.map((center) => ({ value: center, labelFa: center })),
+        }
+      : { ...field, required: false },
+  );
+}

@@ -255,3 +255,10 @@ All API controls remain disabled; no connected-and-tested claim is made.
 - [X] R004 Remove metadata settings navigation and redirect its old route.
 - [X] R005 Update navigation, profile and link tests, and document how to run both apps.
 - [ ] R006 Visually verify 1366×768 and 390px in a browser and exercise the running HamtayarDemo on the user's machine; no live access is available here.
+
+## User-requested classification revision — 2026-11-04
+
+- [X] R007 Remove the duplicate shared document fieldset and keep required center/type fields on each file card.
+- [X] R008 Use shared classification choices عادی / محرمانه / خیلی محرمانه for document type and prompt access level.
+- [X] R009 Populate the prompt center combobox only from successful session Demo registrations, deduplicate names, exclude failed drafts and clear on logout/mode change.
+- [X] R010 Show exactly center/access-level prompt controls; map access level to intended document_type equality and verify mapping/registration/reset behavior.

@@ -1,6 +1,6 @@
 import { useMode } from '../../app/ModeProvider';
 import { ModeSelector } from '../../components/common/ModeSelector';
-import { MetadataFields } from '../../components/metadata/MetadataFields';
+import { registeredCenters } from '../../services/metadata/registeredCenters';
 import { useMetadata } from '../../services/metadata/useMetadata';
 import {
   metadataConfigService,
@@ -20,11 +20,8 @@ import {
 } from './documentsService';
 import { DocumentFileCard } from './DocumentFileCard';
 import type { DocumentDraft } from './documentTypes';
-import type { MetadataValues } from '../../types/metadata';
 const store = createWorkspaceStore(() => ({
   drafts: [] as DocumentDraft[],
-  shared: {} as MetadataValues,
-  space: '',
   error: '',
   preview: false,
   reduced: false,
@@ -52,13 +49,6 @@ store.observe(() => {
       });
     });
   }
-  metadataConfigService.setDraftValues('document-shared', state.shared, (keys) =>
-    store.set({
-      shared: Object.fromEntries(
-        Object.entries(store.get().shared).filter(([key]) => !keys.includes(key)),
-      ),
-    }),
-  );
 });
 export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean }) {
   const state = store.use();
@@ -79,10 +69,10 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
         id: crypto.randomUUID(),
         file,
         sourceId: crypto.randomUUID(),
-        knowledgeSpaceId: state.space,
+        knowledgeSpaceId: 'demo-documents',
         version: '1',
         processingProfile: 'default',
-        customMetadata: { ...state.shared },
+        customMetadata: {},
         overrides: [],
       });
     }
@@ -90,16 +80,6 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
       drafts: [...state.drafts, ...drafts],
       error: errors.join(' '),
       preview: false,
-    });
-  }
-  function shared(key: string, value: MetadataValues[string]) {
-    store.set({
-      shared: { ...state.shared, [key]: value },
-      drafts: state.drafts.map((d) =>
-        d.overrides.includes(key)
-          ? d
-          : { ...d, customMetadata: { ...d.customMetadata, [key]: value } },
-      ),
     });
   }
   const activeDrafts = state.drafts.map((d) => ({
@@ -123,8 +103,8 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
     }
     store.set({ error: '' });
     await Promise.all(
-      activeDrafts.map((d) =>
-        runOperation(
+      activeDrafts.map(async (d) => {
+        const result = await runOperation(
           d.id,
           mode,
           (signal) =>
@@ -132,8 +112,10 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
               ? documentsService.runDemo(d)
               : ingestDocument(d, state.reduced, signal),
           true,
-        ),
-      ),
+        );
+        if (result?.status === 'completed' && mode === 'demo')
+          registeredCenters.add(d.customMetadata.center);
+      }),
     );
   }
   return (
@@ -174,32 +156,6 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
       </div>
       {state.error && <p role="alert">{state.error}</p>}
       {mode === 'api' && !state.error && <p role="alert">{gate.reason}</p>}
-      <fieldset disabled={!canSwitchMode}>
-        <legend>مقادیر مشترک؛ هر سند قابل ویرایش است</legend>
-        <label>
-          فضای دانشی مشترک
-          <input
-            dir="ltr"
-            value={state.space}
-            onChange={(e) =>
-              store.set({
-                space: e.target.value,
-                drafts: state.drafts.map((d) =>
-                  d.overrides.includes('knowledgeSpaceId')
-                    ? d
-                    : { ...d, knowledgeSpaceId: e.target.value },
-                ),
-              })
-            }
-          />
-        </label>
-        <MetadataFields
-          definitions={definitions.map((f) => ({ ...f, labelFa: `${f.labelFa} مشترک` }))}
-          values={state.shared}
-          group="document"
-          onChange={shared}
-        />
-      </fieldset>
       {state.drafts.length === 0 && <p>هنوز سندی انتخاب نشده است.</p>}
       <div className="document-list">
         {state.drafts.map((d) => (
@@ -250,9 +206,7 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
           type="button"
           className="button button--quiet"
           disabled={!canSwitchMode}
-          onClick={() =>
-            store.set({ drafts: [], error: '', preview: false, shared: {}, space: '' })
-          }
+          onClick={() => store.set({ drafts: [], error: '', preview: false })}
         >
           پاک کردن
         </button>

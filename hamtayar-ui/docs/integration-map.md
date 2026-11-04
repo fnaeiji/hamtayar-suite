@@ -71,3 +71,8 @@ integration. Main UI uses strict dev port 5174. The link does not start services
 establish their readiness. A launch-help route remains at `/codebase`.
 Document/Q&A UI metadata is restricted to `center` and `document_type`; descriptive
 `person_access_level` is not an ACL and never bypasses backend authentication.
+
+Latest profile: prompt access-level select maps the shared classification value to
+intended document_type equality; only center and access-level controls are shown.
+Center choices are session-only successful Demo registration records, not a backend
+center catalog. Existing question-only wire DTO and blocked API gates are unchanged.

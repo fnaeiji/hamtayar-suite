@@ -71,27 +71,28 @@ describe('document ingestion Demo flow', () => {
     expect(screen.getByText('notes.md')).toBeVisible();
   });
 
-  it('supports per-file fixed metadata and shared custom values with per-file overrides', async () => {
+  it('shows metadata only on each file card and keeps centers independent', async () => {
     const user = userEvent.setup();
     renderPage();
-    const picker = await screen.findByLabelText('انتخاب اسناد');
-    await user.upload(picker, [file('one.pdf'), file('two.pdf')]);
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
-    await user.type(screen.getByLabelText('مرکز مشترک'), 'alpha');
-
-    const firstCard = screen.getByRole('article', { name: 'one.pdf' });
-    const secondCard = screen.getByRole('article', { name: 'two.pdf' });
-    expect(within(firstCard).getByLabelText('شناسه منبع')).toHaveProperty(
-      'value',
-      expect.stringMatching(/.+/),
+    expect(
+      screen.queryByText('مقادیر مشترک؛ هر سند قابل ویرایش است'),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('مرکز مشترک')).not.toBeInTheDocument();
+    await user.upload(screen.getByLabelText('انتخاب اسناد'), [
+      file('one.pdf'),
+      file('two.pdf'),
+    ]);
+    const first = within(screen.getByRole('article', { name: 'one.pdf' }));
+    const second = within(screen.getByRole('article', { name: 'two.pdf' }));
+    await user.type(first.getByRole('textbox', { name: /^مرکز/ }), 'alpha');
+    await user.type(second.getByRole('textbox', { name: /^مرکز/ }), 'beta');
+    expect(first.getByRole('textbox', { name: /^مرکز/ })).toHaveValue('alpha');
+    expect(second.getByRole('textbox', { name: /^مرکز/ })).toHaveValue('beta');
+    expect(first.getByRole('combobox', { name: /نوع سند/ })).toHaveTextContent('عادی');
+    expect(first.getByRole('combobox', { name: /نوع سند/ })).toHaveTextContent('محرمانه');
+    expect(first.getByRole('combobox', { name: /نوع سند/ })).toHaveTextContent(
+      'خیلی محرمانه',
     );
-    expect(within(firstCard).getByLabelText('فضای دانشی')).toHaveValue('team-docs');
-    expect(within(secondCard).getByLabelText('مرکز')).toHaveValue('alpha');
-
-    await user.clear(within(secondCard).getByLabelText('مرکز'));
-    await user.type(within(secondCard).getByLabelText('مرکز'), 'beta');
-    expect(within(firstCard).getByLabelText('مرکز')).toHaveValue('alpha');
-    expect(within(secondCard).getByLabelText('مرکز')).toHaveValue('beta');
   });
 
   it('previews and clears intended request data', async () => {
@@ -99,7 +100,11 @@ describe('document ingestion Demo flow', () => {
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
     await user.upload(picker, file());
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'manuals');
+    const space = within(
+      screen.getByRole('article', { name: 'handbook.pdf' }),
+    ).getByLabelText('فضای دانشی');
+    await user.clear(space);
+    await user.type(space, 'manuals');
     await user.click(screen.getByRole('button', { name: 'پیش‌نمایش درخواست' }));
 
     expect(
@@ -123,7 +128,13 @@ describe('document ingestion Demo flow', () => {
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
     await user.upload(picker, [file('good.pdf'), file('bad.txt', 12, 'text/plain')]);
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
+    for (const card of screen.getAllByRole('article')) {
+      await user.type(within(card).getByRole('textbox', { name: /^مرکز/ }), 'مرکز الف');
+      await user.selectOptions(
+        within(card).getByRole('combobox', { name: /نوع سند/ }),
+        'normal',
+      );
+    }
     await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
 
     expect(await screen.findByText(/نتیجه نمایشی/)).toBeVisible();
@@ -154,7 +165,13 @@ describe('document ingestion Demo flow', () => {
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
     await user.upload(picker, file());
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
+    for (const card of screen.getAllByRole('article')) {
+      await user.type(within(card).getByRole('textbox', { name: /^مرکز/ }), 'مرکز الف');
+      await user.selectOptions(
+        within(card).getByRole('combobox', { name: /نوع سند/ }),
+        'normal',
+      );
+    }
     await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
 
     await waitFor(() => expect(screen.getByText(/نتیجه نمایشی/)).toBeVisible());

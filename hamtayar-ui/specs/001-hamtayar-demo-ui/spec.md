@@ -250,3 +250,20 @@ Demo requirements for this iteration:
   Retain old browser settings without consuming them in this fixed presentation profile.
 - Previous dynamic settings components/tests remain reusable but are not routed.
   Previous codebase fixture modules are not used by the active code workspace.
+
+## Approved document/classification revision — 2026-11-04
+
+This later user request supersedes shared metadata controls and the previous prompt
+profile: remove the common document fieldset entirely, leaving center and document
+type once per file. Both document fields are required for successful Demo submission.
+Document types and prompt access levels share stable values normal/confidential/
+highly_confidential, labeled عادی / محرمانه / خیلی محرمانه.
+
+The prompt contains exactly two metadata comboboxes: center and access level.
+Center options come only from successfully completed Demo documents in this session;
+trim/collapse whitespace and deduplicate, exclude failed/pending/unsubmitted drafts.
+Keep centers across navigation and clearing draft cards; reset on logout, mode change
+or reload with other session-only demo data. Do not infer a backend registration.
+Access level maps to document_type equality in the intended UI query; do not infer
+permission hierarchy, trust user-entered scope or claim real filtered retrieval.
+The document_type filter control is not separately rendered in the prompt.
