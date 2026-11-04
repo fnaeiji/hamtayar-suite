@@ -1,9 +1,4 @@
-export type MetadataFieldType =
-  | 'text'
-  | 'number'
-  | 'boolean'
-  | 'select'
-  | 'multi_select';
+export type MetadataFieldType = 'text' | 'number' | 'boolean' | 'select' | 'multi_select';
 
 export type MetadataOption = {
   value: string;

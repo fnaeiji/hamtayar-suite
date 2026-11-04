@@ -2,7 +2,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ModeProvider } from './ModeProvider';
 import { DashboardLayout } from './DashboardLayout';
 import { ProtectedRoute } from './ProtectedRoute';
-import { WorkspacePlaceholder } from './WorkspacePlaceholder';
+import { DocumentIngestionPage } from '../features/documents/DocumentIngestionPage';
+import { QAPage } from '../features/qa/QAPage';
+import { CodebasePage } from '../features/codebase/CodebasePage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { OverviewPage } from '../features/overview/OverviewPage';
 import { MetadataSettingsPage } from '../features/metadata/MetadataSettingsPage';
@@ -19,37 +21,10 @@ export function AppRoutes() {
         }
       >
         <Route index element={<OverviewPage />} />
-        <Route
-          path="codebase"
-          element={
-            <WorkspacePlaceholder
-              title="پایگاه کد"
-              description="نمایش آزمایشی آماده‌سازی و پردازش پایگاه کد."
-            />
-          }
-        />
-        <Route
-          path="documents"
-          element={
-            <WorkspacePlaceholder
-              title="ورود اسناد"
-              description="نمایش آزمایشی آماده‌سازی و ورود اسناد."
-            />
-          }
-        />
-        <Route
-          path="qa"
-          element={
-            <WorkspacePlaceholder
-              title="پرسش‌وپاسخ"
-              description="نمایش آزمایشی پرسش و پاسخ از محتوای نمونه."
-            />
-          }
-        />
-        <Route
-          path="settings/metadata"
-          element={<MetadataSettingsPage />}
-        />
+        <Route path="codebase" element={<CodebasePage showMode={false} />} />
+        <Route path="documents" element={<DocumentIngestionPage showMode={false} />} />
+        <Route path="qa" element={<QAPage showMode={false} />} />
+        <Route path="settings/metadata" element={<MetadataSettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

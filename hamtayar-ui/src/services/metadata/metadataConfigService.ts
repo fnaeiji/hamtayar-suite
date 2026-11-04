@@ -121,7 +121,9 @@ export type MetadataValueValidationError = { key: string; message: string };
 
 type MetadataConfigListener = () => void;
 
-function cloneDefinitions(definitions: MetadataFieldDefinition[]): MetadataFieldDefinition[] {
+function cloneDefinitions(
+  definitions: MetadataFieldDefinition[],
+): MetadataFieldDefinition[] {
   return definitions.map((field) => ({
     ...field,
     ...(field.options ? { options: field.options.map((option) => ({ ...option })) } : {}),
@@ -150,7 +152,10 @@ function parseOptions(
 ): MetadataOption[] | undefined {
   const isSelection = type === 'select' || type === 'multi_select';
   if (!isSelection) {
-    if (rawOptions !== undefined && (!Array.isArray(rawOptions) || rawOptions.length > 0)) {
+    if (
+      rawOptions !== undefined &&
+      (!Array.isArray(rawOptions) || rawOptions.length > 0)
+    ) {
       errors.push(`گزینه برای نوع داده فیلد شماره ${index + 1} مجاز نیست.`);
     }
     return undefined;
@@ -171,7 +176,9 @@ function parseOptions(
       typeof rawOption.labelFa !== 'string' ||
       rawOption.labelFa.trim() === ''
     ) {
-      errors.push(`گزینه شماره ${optionIndex + 1} در فیلد شماره ${index + 1} معتبر نیست.`);
+      errors.push(
+        `گزینه شماره ${optionIndex + 1} در فیلد شماره ${index + 1} معتبر نیست.`,
+      );
       continue;
     }
     const normalizedValue = rawOption.value.toLowerCase();
@@ -182,13 +189,18 @@ function parseOptions(
     seen.add(normalizedValue);
     options.push({ value: rawOption.value, labelFa: rawOption.labelFa.trim() });
   }
-  if (options.length === 0) errors.push(`فیلد انتخابی شماره ${index + 1} گزینه معتبر ندارد.`);
+  if (options.length === 0)
+    errors.push(`فیلد انتخابی شماره ${index + 1} گزینه معتبر ندارد.`);
   return options;
 }
 
 export function validateMetadataDefinitions(input: unknown): MetadataValidationResult {
   if (!Array.isArray(input)) {
-    return { valid: false, definitions: null, errors: ['فهرست تعریف‌های فراداده معتبر نیست.'] };
+    return {
+      valid: false,
+      definitions: null,
+      errors: ['فهرست تعریف‌های فراداده معتبر نیست.'],
+    };
   }
 
   const errors: string[] = [];
@@ -223,7 +235,9 @@ export function validateMetadataDefinitions(input: unknown): MetadataValidationR
       typeof rawField.enabled !== 'boolean' ||
       typeof rawField.visibleInForm !== 'boolean'
     ) {
-      errors.push(`تنظیم‌های فیلد شماره ${index + 1} باید مقدار درست یا نادرست داشته باشند.`);
+      errors.push(
+        `تنظیم‌های فیلد شماره ${index + 1} باید مقدار درست یا نادرست داشته باشند.`,
+      );
     }
     if (group === 'document' && typeof rawField.filterable !== 'boolean') {
       errors.push(`وضعیت فیلترپذیری فیلد سند شماره ${index + 1} مشخص نشده است.`);
@@ -321,7 +335,11 @@ export function validateMetadataValues(
           );
         break;
     }
-    if (!valid) errors.push({ key: field.key, message: `مقدار فیلد «${field.labelFa}» معتبر نیست.` });
+    if (!valid)
+      errors.push({
+        key: field.key,
+        message: `مقدار فیلد «${field.labelFa}» معتبر نیست.`,
+      });
   }
   return errors;
 }
@@ -340,7 +358,9 @@ export function filterActiveMetadataValues(
       .map(({ key }) => key),
   );
   return Object.fromEntries(
-    Object.entries(values).filter(([key, value]) => activeKeys.has(key) && isSuppliedValue(value)),
+    Object.entries(values).filter(
+      ([key, value]) => activeKeys.has(key) && isSuppliedValue(value),
+    ),
   );
 }
 
@@ -406,7 +426,8 @@ export function createMetadataConfigService(storageProvider: () => StorageLike |
     const combined: MetadataValues = {};
     for (const { values } of drafts.values()) {
       for (const [key, value] of Object.entries(values)) {
-        if (!Object.hasOwn(combined, key) || isSuppliedValue(value)) combined[key] = value;
+        if (!Object.hasOwn(combined, key) || isSuppliedValue(value))
+          combined[key] = value;
       }
     }
     return combined;
@@ -442,7 +463,8 @@ export function createMetadataConfigService(storageProvider: () => StorageLike |
             definitions: cloneDefinitions(DEFAULT_METADATA_FIELDS),
             loaded: true,
             persistenceAvailable: false,
-            warning: 'تعریف‌های ذخیره‌شده معتبر نبودند؛ پیش‌فرض‌ها فقط در حافظه بارگذاری شدند.',
+            warning:
+              'تعریف‌های ذخیره‌شده معتبر نبودند؛ پیش‌فرض‌ها فقط در حافظه بارگذاری شدند.',
           });
         }
         return setState({
@@ -513,7 +535,7 @@ export function createMetadataConfigService(storageProvider: () => StorageLike |
       drafts.clear();
     },
     discardDraftValues(keys: string[]) {
-      for (const [owner, draft] of drafts) {
+      for (const [owner, draft] of [...drafts]) {
         const ownedKeys = keys.filter((key) => Object.hasOwn(draft.values, key));
         if (ownedKeys.length === 0) continue;
         for (const key of ownedKeys) delete draft.values[key];

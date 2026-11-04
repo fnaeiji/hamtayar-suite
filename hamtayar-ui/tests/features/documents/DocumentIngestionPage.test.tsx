@@ -1,4 +1,11 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
@@ -42,8 +49,12 @@ describe('document ingestion Demo flow', () => {
     expect(screen.getByText(/25 بایت/)).toBeVisible();
 
     const dropZone = screen.getByRole('region', { name: 'انتخاب یا رها کردن اسناد' });
-    fireEvent.drop(dropZone, { dataTransfer: { files: [file('bad.exe', 10, 'application/octet-stream')] } });
-    expect(await screen.findByRole('alert')).toHaveTextContent(/قالب این فایل پشتیبانی نمی‌شود/);
+    fireEvent.drop(dropZone, {
+      dataTransfer: { files: [file('bad.exe', 10, 'application/octet-stream')] },
+    });
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /قالب این فایل پشتیبانی نمی‌شود/,
+    );
     expect(screen.queryByText('bad.exe')).not.toBeInTheDocument();
   });
 
@@ -51,7 +62,10 @@ describe('document ingestion Demo flow', () => {
     const user = userEvent.setup();
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
-    await user.upload(picker, [file('large.txt', 3_000_000, 'text/plain'), file('notes.md')]);
+    await user.upload(picker, [
+      file('large.txt', 3_000_000, 'text/plain'),
+      file('notes.md'),
+    ]);
 
     expect(await screen.findByText('large.txt')).toBeVisible();
     expect(screen.getByText('notes.md')).toBeVisible();
@@ -67,7 +81,10 @@ describe('document ingestion Demo flow', () => {
 
     const firstCard = screen.getByRole('article', { name: 'one.pdf' });
     const secondCard = screen.getByRole('article', { name: 'two.pdf' });
-    expect(within(firstCard).getByLabelText('شناسه منبع')).toHaveValue(expect.stringMatching(/.+/));
+    expect(within(firstCard).getByLabelText('شناسه منبع')).toHaveProperty(
+      'value',
+      expect.stringMatching(/.+/),
+    );
     expect(within(firstCard).getByLabelText('فضای دانشی')).toHaveValue('team-docs');
     expect(within(secondCard).getByLabelText('پروژه')).toHaveValue('alpha');
 
@@ -85,7 +102,9 @@ describe('document ingestion Demo flow', () => {
     await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'manuals');
     await user.click(screen.getByRole('button', { name: 'پیش‌نمایش درخواست' }));
 
-    expect(await screen.findByRole('region', { name: 'پیش‌نمایش درخواست‌ها' })).toHaveTextContent('manuals');
+    expect(
+      await screen.findByRole('region', { name: 'پیش‌نمایش درخواست‌ها' }),
+    ).toHaveTextContent('manuals');
     await user.click(screen.getByRole('button', { name: 'پاک کردن' }));
     expect(screen.queryByText('handbook.pdf')).not.toBeInTheDocument();
   });
@@ -109,7 +128,9 @@ describe('document ingestion Demo flow', () => {
 
     expect(await screen.findByText(/نتیجه نمایشی/)).toBeVisible();
     expect(screen.getByText(/نمونه این فایل با خطا روبه‌رو شد/)).toBeVisible();
-    expect(screen.getByRole('article', { name: 'good.pdf' })).toHaveTextContent('completed');
+    expect(screen.getByRole('article', { name: 'good.pdf' })).toHaveTextContent(
+      'completed',
+    );
     expect(screen.getByRole('article', { name: 'bad.txt' })).toHaveTextContent('failed');
   });
 
@@ -121,7 +142,9 @@ describe('document ingestion Demo flow', () => {
     const picker = screen.getByLabelText('انتخاب اسناد');
     await user.upload(picker, file());
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/سقف بارگذاری سرویس تأیید نشده است/);
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /سقف بارگذاری سرویس تأیید نشده است/,
+    );
     expect(screen.getByRole('button', { name: 'ارسال به سرویس' })).toBeDisabled();
   });
 

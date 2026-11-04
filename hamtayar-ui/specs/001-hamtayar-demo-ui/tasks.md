@@ -16,7 +16,7 @@ description: "Dependency-ordered implementation tasks for Hamtayar Demo UI"
 
 **Purpose**: Create the new frontend package and reproducible developer tooling.
 
-- [ ] T001 Initialize the React, strict TypeScript, and Vite SPA with React Router, `react-markdown`, Vitest, React Testing Library, ESLint, and Prettier dependencies in `package.json`, `package-lock.json`, `index.html`, `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, and `src/main.tsx`.
+- [X] T001 Initialize the React, strict TypeScript, and Vite SPA with React Router, `react-markdown`, Vitest, React Testing Library, ESLint, and Prettier dependencies in `package.json`, `package-lock.json`, `index.html`, `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, and `src/main.tsx`.
 - [X] T002 Configure Vitest/RTL setup and npm scripts for `dev`, `build`, `preview`, `format`, `format:check`, `lint`, `typecheck`, and `test` in `vitest.config.ts`, `tests/setup.ts`, `eslint.config.mjs`, `.prettierrc.json`, and `package.json`.
 - [X] T003 Add generated output, dependency artifacts, and `.env.local` to `.gitignore`; create a non-secret `.env.example` containing service addresses/timeouts and any required verified API upload limit in `.gitignore` and `.env.example`.
 
@@ -87,14 +87,14 @@ description: "Dependency-ordered implementation tasks for Hamtayar Demo UI"
 
 ### Validation tasks
 
-- [ ] T020 [US3] Write document-flow tests for selection/drop using identical file-type/size validation, no artificial Demo-mode size cap, API upload blocked when the per-service limit is unknown, file facts, per-file metadata, shared values with overrides, preview/clear, independent partial outcomes, Demo labeling, and zero operational requests in `tests/features/documents/DocumentIngestionPage.test.tsx`.
+- [X] T020 [US3] Write document-flow tests for selection/drop using identical file-type/size validation, no artificial Demo-mode size cap, API upload blocked when the per-service limit is unknown, file facts, per-file metadata, shared values with overrides, preview/clear, independent partial outcomes, Demo labeling, and zero operational requests in `tests/features/documents/DocumentIngestionPage.test.tsx`.
 
 ### Implementation tasks
 
-- [ ] T021 [US3] Define document draft and per-file operation state in `src/features/documents/documentTypes.ts`; keep file content in memory and model `sourceId`, `knowledgeSpaceId`, `version`, `processingProfile`, `customMetadata`, mode, status, and result independently for each file.
-- [ ] T022 [US3] Add representative labeled sample document inputs and outcomes in `src/fixtures/documents.ts`; fixtures must identify themselves as simulated and must not call the HTTP client.
-- [ ] T023 [US3] Implement document selection/drop through one shared file-type/size validator, per-file name/type/size, editable fixed fields, metadata controls, and shared values with per-file overrides in `src/features/documents/DocumentIngestionPage.tsx` and `src/features/documents/DocumentFileCard.tsx`; use no artificial Demo size cap, block API upload when its verified service limit is unknown, suggest an editable UUID source ID, and retain that ID for deliberate retry.
-- [ ] T024 [US3] Implement request preview, required-value/confirmed-limit validation, clear behavior, independent Demo outcomes, and a conspicuous simulated/no-backend label in `src/features/documents/documentsService.ts` and `src/features/documents/DocumentIngestionPage.tsx`; replace the document workspace placeholder route in `src/app/router.tsx`.
+- [X] T021 [US3] Define document draft and per-file operation state in `src/features/documents/documentTypes.ts`; keep file content in memory and model `sourceId`, `knowledgeSpaceId`, `version`, `processingProfile`, `customMetadata`, mode, status, and result independently for each file.
+- [X] T022 [US3] Add representative labeled sample document inputs and outcomes in `src/fixtures/documents.ts`; fixtures must identify themselves as simulated and must not call the HTTP client.
+- [X] T023 [US3] Implement document selection/drop through one shared file-type/size validator, per-file name/type/size, editable fixed fields, metadata controls, and shared values with per-file overrides in `src/features/documents/DocumentIngestionPage.tsx` and `src/features/documents/DocumentFileCard.tsx`; use no artificial Demo size cap, block API upload when its verified service limit is unknown, suggest an editable UUID source ID, and retain that ID for deliberate retry.
+- [X] T024 [US3] Implement request preview, required-value/confirmed-limit validation, clear behavior, independent Demo outcomes, and a conspicuous simulated/no-backend label in `src/features/documents/documentsService.ts` and `src/features/documents/DocumentIngestionPage.tsx`; replace the document workspace placeholder route in `src/app/router.tsx`.
 
 **Checkpoint**: US3 produces a complete useful local demonstration with every service stopped.
 
@@ -108,14 +108,14 @@ description: "Dependency-ordered implementation tasks for Hamtayar Demo UI"
 
 ### Validation tasks
 
-- [ ] T025 [US4] Write Q&A tests for filter equality/any-of/AND, omission of unset values, preservation of `0`/`false`, explicit question-only disclosure, retained input on errors, and safe Markdown with script/unsafe-URL examples in `tests/features/qa/QAPage.test.tsx` and `tests/components/SafeAnswerMarkdown.test.tsx`.
+- [X] T025 [US4] Write Q&A tests for filter equality/any-of/AND, omission of unset values, preservation of `0`/`false`, explicit question-only disclosure, retained input on errors, and safe Markdown with script/unsafe-URL examples in `tests/features/qa/QAPage.test.tsx` and `tests/components/SafeAnswerMarkdown.test.tsx`.
 
 ### Implementation tasks
 
-- [ ] T026 [P] [US4] Implement the internal query model and filter conversion in `src/features/qa/queryModel.ts`: one value means equality, multiple selected values mean any-of, fields combine with AND, unset values are omitted, and `0`/`false` remain values; do not emit arbitrary database syntax.
-- [ ] T027 [P] [US4] Add labeled sample answers and citations as local fixtures in `src/fixtures/answers.ts`; never present them as API output or as evidence retrieved for the user's metadata/filters.
-- [ ] T028 [P] [US4] Implement answer Markdown rendering in `src/components/answers/SafeAnswerMarkdown.tsx` using `react-markdown` safe defaults; do not enable raw HTML, unsafe plugins, `dangerouslySetInnerHTML`, or a custom unsafe URL transform.
-- [ ] T029 [US4] Implement the Q&A form, requiring a non-empty trimmed question and enforcing the current API's 1–4096 character limit for API requests, dynamic descriptive-user fields, derived filter controls, question-only preview, Demo result/sources, and clear separation from API claims in `src/features/qa/QAPage.tsx` and `src/features/qa/qaService.ts`; replace the Q&A workspace placeholder route in `src/app/router.tsx`.
+- [X] T026 [P] [US4] Implement the internal query model and filter conversion in `src/features/qa/queryModel.ts`: one value means equality, multiple selected values mean any-of, fields combine with AND, unset values are omitted, and `0`/`false` remain values; do not emit arbitrary database syntax.
+- [X] T027 [P] [US4] Add labeled sample answers and citations as local fixtures in `src/fixtures/answers.ts`; never present them as API output or as evidence retrieved for the user's metadata/filters.
+- [X] T028 [P] [US4] Implement answer Markdown rendering in `src/components/answers/SafeAnswerMarkdown.tsx` using `react-markdown` safe defaults; do not enable raw HTML, unsafe plugins, `dangerouslySetInnerHTML`, or a custom unsafe URL transform.
+- [X] T029 [US4] Implement the Q&A form, requiring a non-empty trimmed question and enforcing the current API's 1–4096 character limit for API requests, dynamic descriptive-user fields, derived filter controls, question-only preview, Demo result/sources, and clear separation from API claims in `src/features/qa/QAPage.tsx` and `src/features/qa/qaService.ts`; replace the Q&A workspace placeholder route in `src/app/router.tsx`.
 
 **Checkpoint**: US4 runs entirely on fixtures and cannot be mistaken for personalized or filtered backend output.
 
@@ -129,12 +129,12 @@ description: "Dependency-ordered implementation tasks for Hamtayar Demo UI"
 
 ### Validation tasks
 
-- [ ] T030 [US5] Write codebase-flow tests for archive selection, project name, labeled sample states/logs, no operational requests in Demo, API-unavailable messaging, and unaffected navigation in `tests/features/codebase/CodebasePage.test.tsx`.
+- [X] T030 [US5] Write codebase-flow tests for archive selection, project name, labeled sample states/logs, no operational requests in Demo, API-unavailable messaging, and unaffected navigation in `tests/features/codebase/CodebasePage.test.tsx`.
 
 ### Implementation tasks
 
-- [ ] T031 [US5] Add clearly labeled codebase sample status transitions and logs in `src/fixtures/codebase.ts`; do not describe fixture transitions as observed API workflow nodes or progress.
-- [ ] T032 [US5] Implement the archive/project form, fixture demonstration, explicit unavailable state in API mode, and workspace-isolated errors in `src/features/codebase/CodebasePage.tsx` and `src/features/codebase/codebaseService.ts`; replace the Codebase workspace placeholder route in `src/app/router.tsx`.
+- [X] T031 [US5] Add clearly labeled codebase sample status transitions and logs in `src/fixtures/codebase.ts`; do not describe fixture transitions as observed API workflow nodes or progress.
+- [X] T032 [US5] Implement the archive/project form, fixture demonstration, explicit unavailable state in API mode, and workspace-isolated errors in `src/features/codebase/CodebasePage.tsx` and `src/features/codebase/codebaseService.ts`; replace the Codebase workspace placeholder route in `src/app/router.tsx`.
 
 **Checkpoint**: US5 remains demonstrable without CGC and its unavailability does not affect other routes.
 
@@ -148,17 +148,17 @@ description: "Dependency-ordered implementation tasks for Hamtayar Demo UI"
 
 ### Validation tasks
 
-- [ ] T033 [P] [US6] Write mocked Hamtayar adapter and diagnostics tests in `tests/services/hamtayarAdapter.test.ts` and `tests/components/TestDetailsPanel.test.tsx`; verify ingestion uses exactly `file`, `source_id`, `knowledge_space_id`, `version`, `processing_profile`, maps `status`/`source_id`/`version`/nullable `chunks_indexed`/optional `request_id`, renders null chunk count as “گزارش نشده”, sends Q&A as `{question}` only, distinguishes 401/422/413/500/503/504/network timeout, and never renders secrets, stack traces, or fabricated IDs.
-- [ ] T034 [P] [US6] Write CGC readiness/security tests in `tests/services/cgcAdapter.test.ts` proving missing verification/configuration returns a blocked outcome and the adapter rejects a non-local target for the unauthenticated service.
+- [X] T033 [P] [US6] Write mocked Hamtayar adapter and diagnostics tests in `tests/services/hamtayarAdapter.test.ts` and `tests/components/TestDetailsPanel.test.tsx`; verify ingestion uses exactly `file`, `source_id`, `knowledge_space_id`, `version`, `processing_profile`, maps `status`/`source_id`/`version`/nullable `chunks_indexed`/optional `request_id`, renders null chunk count as “گزارش نشده”, sends Q&A as `{question}` only, distinguishes 401/422/413/500/503/504/network timeout, and never renders secrets, stack traces, or fabricated IDs.
+- [X] T034 [P] [US6] Write CGC readiness/security tests in `tests/services/cgcAdapter.test.ts` proving missing verification/configuration returns a blocked outcome and the adapter rejects a non-local target for the unauthenticated service.
 
 ### Implementation tasks
 
 - [ ] T035 [US6] Inspect the intended running service settings and record per-operation URL, CORS/proxy, executor/auth readiness, limits, and evidence as `Connected and tested`, `Adapter only`, `Blocked`, or `Demo only` in `docs/integration-map.md`; retain disabled API controls for any gate that fails.
-- [ ] T036 [P] [US6] Implement Hamtayar clients and runtime response validation in `src/services/api/adapters/hamtayarAdapter.ts` using only observed contracts and explicit UI-model-to-wire-DTO mapping: ingestion is synchronous and per-file; custom metadata requires explicit reduced-test confirmation; Q&A wire input is `{question}` only (1–4096 characters), with current 401/503 responses treated as blockers and no auth bypass or fixture fallback.
+- [X] T036 [P] [US6] Implement Hamtayar clients and runtime response validation in `src/services/api/adapters/hamtayarAdapter.ts` using only observed contracts and explicit UI-model-to-wire-DTO mapping: ingestion is synchronous and per-file; custom metadata requires explicit reduced-test confirmation; Q&A wire input is `{question}` only (1–4096 characters), with current 401/503 responses treated as blockers and no auth bypass or fixture fallback.
 - [ ] T037 [P] [US6] Verify current CGC OpenAPI/capability/diagnostic output, endpoint sequence, configured archive limits, status/log/cancellation semantics, CGC executable, both Neo4j targets, CORS/proxy, and local-only reachability; update `specs/001-hamtayar-demo-ui/contracts/cgc-local-api.md` with observed evidence and keep API actions disabled if any prerequisite fails.
-- [ ] T038 [US6] Implement `src/services/api/adapters/cgcAdapter.ts` only for verified operations and explicitly configured loopback/local targets, with runtime response validation and explicit UI-model-to-wire-DTO mapping; if readiness gates fail, return an actionable blocked result and keep controls disabled without changing the CGC service or exposing it to a network.
-- [ ] T039 [P] [US6] Implement the collapsible sanitized request/response/elapsed-time/request-ID panel in `src/components/operations/TestDetailsPanel.tsx`; show intended and actual transmitted payloads separately, omit secrets/stack traces, and never fabricate request IDs or response data.
-- [ ] T040 [US6] Connect API mode to per-operation readiness and verified adapters in `src/services/operations/operationService.ts` and the document/Q&A/codebase pages; prevent duplicate submits/mode changes while pending, preserve uncertain upload outcomes/source IDs, distinguish `no_evidence` from provider failure, and never transition an API failure into fixture output.
+- [X] T038 [US6] Implement `src/services/api/adapters/cgcAdapter.ts` only for verified operations and explicitly configured loopback/local targets, with runtime response validation and explicit UI-model-to-wire-DTO mapping; if readiness gates fail, return an actionable blocked result and keep controls disabled without changing the CGC service or exposing it to a network.
+- [X] T039 [P] [US6] Implement the collapsible sanitized request/response/elapsed-time/request-ID panel in `src/components/operations/TestDetailsPanel.tsx`; show intended and actual transmitted payloads separately, omit secrets/stack traces, and never fabricate request IDs or response data.
+- [X] T040 [US6] Connect API mode to per-operation readiness and verified adapters in `src/services/operations/operationService.ts` and the document/Q&A/codebase pages; prevent duplicate submits/mode changes while pending, preserve uncertain upload outcomes/source IDs, distinguish `no_evidence` from provider failure, and never transition an API failure into fixture output.
 
 **Checkpoint**: Any unavailable operation has an explicit blocker; each enabled operation reports actual response data only. Demo mode remains independent.
 
@@ -168,8 +168,8 @@ description: "Dependency-ordered implementation tasks for Hamtayar Demo UI"
 
 **Purpose**: Complete user-facing guidance, visual/accessibility checks, and verifiable delivery evidence.
 
-- [ ] T041 [P] Write the Persian README with PowerShell setup/start commands, fixed demo credentials, modes, local configuration, limitations, and manual verification steps in `README.md`.
-- [ ] T042 [P] Document existing APIs, permitted client mappings, integration results/blockers, and deferred backend work in `docs/integration-map.md`, ensuring each operation uses one of the four classifications in the spec.
+- [X] T041 [P] Write the Persian README with PowerShell setup/start commands, fixed demo credentials, modes, local configuration, limitations, and manual verification steps in `README.md`.
+- [X] T042 [P] Document existing APIs, permitted client mappings, integration results/blockers, and deferred backend work in `docs/integration-map.md`, ensuring each operation uses one of the four classifications in the spec.
 - [ ] T043 Review and correct RTL/LTR layout, keyboard navigation, visible focus, labels, non-color status cues, 1366×768 page overflow, and 390px action availability in `src/styles/global.css` and affected `src/features/*` components.
 - [ ] T044 Run the documented quickstart scenarios and repeatable `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build`; record actual outcomes, environment, and blocked API checks in `README.md` without claiming unrun checks passed.
 
@@ -234,3 +234,15 @@ Complete US6 per operation only after its contract/readiness gates pass. If a ga
 - Write each validation task before the corresponding implementation task and confirm its expected failing behavior before implementation.
 - No backend service, auth, database, workflow, or CGC changes are in scope.
 - Do not claim real-service verification unless the operation was actually exercised and evidence was recorded.
+
+## Delivery reconciliation — 2026-11-04
+
+Implementation was reconciled against GitHub main at `9ed3f44`. The uploaded task
+list marked document implementation complete, but those source files were absent
+in the repository; they have now been implemented and the existing tests pass.
+
+T035 and T037 remain blocked on live service evidence. T043 and the interactive
+portion of T044 remain pending because the browser runtime could not be installed.
+Automated checks pass (49 tests, lint, types, format, build), and production preview
+returned HTTP 200. See `docs/verification.md` and `docs/integration-map.md`.
+All API controls remain disabled; no connected-and-tested claim is made.

@@ -25,7 +25,8 @@ export function OverviewPage() {
       <p className="eyebrow">نمای کلی</p>
       <h1 id="overview-title">به دموی همتایار خوش آمدید</h1>
       <p className="page-intro">
-        این محیط برای نمایش جریان‌های کاری ساخته شده است. نتیجه‌های نمایشی در سرور ثبت نمی‌شوند.
+        این محیط برای نمایش جریان‌های کاری ساخته شده است. نتیجه‌های نمایشی در سرور ثبت
+        نمی‌شوند.
       </p>
 
       <div className="workspace-grid">

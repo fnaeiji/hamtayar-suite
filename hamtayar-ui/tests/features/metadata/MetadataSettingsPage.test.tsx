@@ -46,7 +46,9 @@ describe('metadata settings page', () => {
     expect(await screen.findByRole('heading', { name: 'دوره نگهداری' })).toBeVisible();
 
     await user.click(screen.getByRole('button', { name: 'حذف دوره نگهداری' }));
-    expect(screen.queryByRole('heading', { name: 'دوره نگهداری' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'دوره نگهداری' }),
+    ).not.toBeInTheDocument();
   });
 
   it('rejects invalid definitions with a visible Persian message', async () => {
@@ -83,7 +85,10 @@ describe('metadata settings page', () => {
     await user.type(screen.getByLabelText('برچسب فارسی'), 'وضعیت بررسی');
     await user.selectOptions(screen.getByLabelText('گروه'), 'document');
     await user.selectOptions(screen.getByLabelText('نوع داده'), 'select');
-    await user.type(screen.getByLabelText('گزینه‌ها (هر خط: مقدار=برچسب فارسی)'), 'approved=تأییدشده');
+    await user.type(
+      screen.getByLabelText('گزینه‌ها (هر خط: مقدار=برچسب فارسی)'),
+      'approved=تأییدشده',
+    );
     await user.click(screen.getByRole('button', { name: 'ذخیره فیلد' }));
 
     await waitFor(() => expect(screen.getByLabelText('وضعیت بررسی')).toBeVisible());
@@ -112,6 +117,8 @@ describe('metadata settings page', () => {
     await user.type(await screen.findByLabelText('یادداشت موقت'), 'مقدار آزمایشی');
     await user.click(screen.getByRole('button', { name: 'بازگردانی پیش‌فرض‌ها' }));
     expect(confirm).toHaveBeenCalled();
-    await waitFor(() => expect(metadataConfigService.getSnapshot().definitions).toHaveLength(7));
+    await waitFor(() =>
+      expect(metadataConfigService.getSnapshot().definitions).toHaveLength(7),
+    );
   });
 });

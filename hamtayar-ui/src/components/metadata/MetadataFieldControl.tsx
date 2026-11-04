@@ -20,20 +20,27 @@ export function MetadataFieldControl({
 
   if (field.type === 'boolean') {
     return (
-      <div className="metadata-field metadata-field--boolean">
+      <div className="metadata-field">
         <label htmlFor={id}>
-          <input
-            aria-required={required}
-            checked={value === true}
-            id={id}
-            onChange={(event) => onChange(field.key, event.target.checked)}
-            type="checkbox"
-          />
-          <span>
-            {field.labelFa}
-            {required && <span aria-hidden="true"> *</span>}
-          </span>
+          {field.labelFa}
+          {required && <span aria-hidden="true"> *</span>}
         </label>
+        <select
+          id={id}
+          aria-required={required}
+          required={required}
+          value={typeof value === 'boolean' ? String(value) : ''}
+          onChange={(event) =>
+            onChange(
+              field.key,
+              event.target.value === '' ? '' : event.target.value === 'true',
+            )
+          }
+        >
+          <option value="">تعیین نشده</option>
+          <option value="true">بله</option>
+          <option value="false">خیر</option>
+        </select>
       </div>
     );
   }

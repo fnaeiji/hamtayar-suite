@@ -130,3 +130,106 @@ code,
     transition-duration: 0.01ms !important;
   }
 }
+
+.page-content {
+  min-width: 0;
+}
+.page-content label {
+  display: block;
+}
+.page-content input:not([type='checkbox']),
+.page-content select,
+.page-content textarea {
+  max-width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text);
+}
+.page-content textarea {
+  width: 100%;
+  resize: vertical;
+}
+.page-content fieldset {
+  min-width: 0;
+  margin-block: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.page-content legend {
+  font-weight: 600;
+  padding-inline: 0.4rem;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.form-grid input {
+  width: 100%;
+}
+.notice {
+  border-inline-start: 4px solid var(--color-brand);
+  padding: 0.8rem 1rem;
+  background: #eaf2fb;
+  border-radius: var(--radius-sm);
+}
+.drop-zone {
+  border: 2px dashed #93acca;
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  margin-block: 1rem;
+  background: #f7faff;
+}
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-block: 1.25rem;
+}
+.document-list {
+  display: grid;
+  gap: 1rem;
+}
+.document-card h2,
+.answer-markdown {
+  overflow-wrap: anywhere;
+}
+.test-details {
+  margin-block: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  min-width: 0;
+}
+.test-details summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.page-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 1rem;
+  background: #edf1f6;
+  border-radius: var(--radius-sm);
+}
+[role='alert'] {
+  color: var(--color-danger);
+}
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .actions > button {
+    width: 100%;
+  }
+}
+.page-content .button:not(.button--quiet) {
+  color: white;
+  background: var(--color-brand);
+}
+.button:disabled {
+  opacity: 0.55;
+}

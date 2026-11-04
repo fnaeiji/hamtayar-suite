@@ -43,7 +43,9 @@ export function DashboardLayout() {
           <nav>
             {navigation.map(({ to, label, end }) => (
               <NavLink
-                className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
+                className={({ isActive }) =>
+                  `nav-link${isActive ? ' nav-link--active' : ''}`
+                }
                 end={end}
                 key={to}
                 to={to}

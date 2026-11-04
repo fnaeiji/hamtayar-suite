@@ -8,9 +8,14 @@ import {
   validateMetadataValues,
   type StorageLike,
 } from '../../../src/services/metadata/metadataConfigService';
-import type { MetadataFieldDefinition, MetadataFieldType } from '../../../src/types/metadata';
+import type {
+  MetadataFieldDefinition,
+  MetadataFieldType,
+} from '../../../src/types/metadata';
 
-function memoryStorage(seed: Record<string, string> = {}): StorageLike & { data: Record<string, string> } {
+function memoryStorage(
+  seed: Record<string, string> = {},
+): StorageLike & { data: Record<string, string> } {
   const data = { ...seed };
   return {
     data,
@@ -26,7 +31,9 @@ function memoryStorage(seed: Record<string, string> = {}): StorageLike & { data:
   };
 }
 
-function documentField(overrides: Partial<MetadataFieldDefinition> = {}): MetadataFieldDefinition {
+function documentField(
+  overrides: Partial<MetadataFieldDefinition> = {},
+): MetadataFieldDefinition {
   return {
     key: 'budget',
     labelFa: 'بودجه',
@@ -55,16 +62,19 @@ describe('metadata configuration service', () => {
       'answer_language',
     ]);
     expect(new Set(keys).size).toBe(7);
-    expect(DEFAULT_METADATA_FIELDS.every(({ labelFa }) => labelFa.trim().length > 0)).toBe(true);
-    expect(DEFAULT_METADATA_FIELDS.find(({ key }) => key === 'department')?.options?.map(({ value }) => value)).toEqual([
-      'engineering',
-      'hr',
-      'finance',
-    ]);
-    expect(DEFAULT_METADATA_FIELDS.find(({ key }) => key === 'answer_language')?.options?.map(({ value }) => value)).toEqual([
-      'fa',
-      'en',
-    ]);
+    expect(
+      DEFAULT_METADATA_FIELDS.every(({ labelFa }) => labelFa.trim().length > 0),
+    ).toBe(true);
+    expect(
+      DEFAULT_METADATA_FIELDS.find(({ key }) => key === 'department')?.options?.map(
+        ({ value }) => value,
+      ),
+    ).toEqual(['engineering', 'hr', 'finance']);
+    expect(
+      DEFAULT_METADATA_FIELDS.find(({ key }) => key === 'answer_language')?.options?.map(
+        ({ value }) => value,
+      ),
+    ).toEqual(['fa', 'en']);
   });
 
   it('rejects duplicate, malformed, and reserved keys without changing valid definitions', () => {
@@ -97,7 +107,9 @@ describe('metadata configuration service', () => {
         },
       ]).valid,
     ).toBe(false);
-    expect(validateMetadataDefinitions([{ ...selectField, options: [] }]).valid).toBe(false);
+    expect(validateMetadataDefinitions([{ ...selectField, options: [] }]).valid).toBe(
+      false,
+    );
     expect(
       validateMetadataDefinitions([
         { ...selectField, options: [{ value: 'دو مقدار', labelFa: 'نامعتبر' }] },
@@ -117,7 +129,9 @@ describe('metadata configuration service', () => {
         type: 'boolean',
       }),
     ];
-    expect(validateMetadataValues(fields, { budget: 0, published: false }, 'document')).toEqual([]);
+    expect(
+      validateMetadataValues(fields, { budget: 0, published: false }, 'document'),
+    ).toEqual([]);
     expect(
       validateMetadataValues(fields, { budget: '0', published: 'false' }, 'document'),
     ).toHaveLength(2);
@@ -152,7 +166,10 @@ describe('metadata configuration service', () => {
     const restarted = createMetadataConfigService(() => storage);
     expect(restarted.load().definitions.map(({ key }) => key)).toContain('budget');
     expect(storage.data.unrelated).toBe('preserve');
-    expect(Object.keys(storage.data)).toEqual(['unrelated', 'hamtayar-demo-ui.metadata.v1']);
+    expect(Object.keys(storage.data)).toEqual([
+      'unrelated',
+      'hamtayar-demo-ui.metadata.v1',
+    ]);
   });
 
   it('restores defaults by changing only the namespaced metadata key', () => {

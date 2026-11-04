@@ -35,7 +35,8 @@ export function LoginPage() {
         <p className="eyebrow">محیط آزمایشی</p>
         <h1 id="login-title">ورود به دموی همتایار</h1>
         <p className="login-card__description">
-          این ورود فقط برای نمایش رابط کاربری است و به سرویس‌های پشتیبان احراز هویت نمی‌کند.
+          این ورود فقط برای نمایش رابط کاربری است و به سرویس‌های پشتیبان احراز هویت
+          نمی‌کند.
         </p>
         {error && <StatusMessage tone="error">{error}</StatusMessage>}
         <form className="login-form" onSubmit={handleSubmit}>

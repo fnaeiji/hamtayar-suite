@@ -26,3 +26,11 @@ Until all gates pass, show an unavailable/blocked explanation in API mode and ke
 
 - `D:\Hamtayar\CGC\HamtayarDemo\README.md`
 - `D:\Hamtayar\CGC\HamtayarDemo\backend\app\main.py`
+
+## Delivery evidence — 2026-11-04
+
+No running CGC target was supplied or verified in this execution environment.
+OpenAPI/capability/diagnostic output, executable, both Neo4j targets, archive limits,
+CORS and completion semantics remain unverified. The client only implements a
+loopback/readiness blocker and does not send archive/index/status requests.
+See `../../../docs/integration-map.md`. T037 remains open.

@@ -22,7 +22,9 @@ export function signIn(username: string, password: string): boolean {
 export function hasDemoSession(): boolean {
   if (signedOutInMemory) return false;
   try {
-    const stored: unknown = JSON.parse(window.sessionStorage.getItem(SESSION_KEY) ?? 'null');
+    const stored: unknown = JSON.parse(
+      window.sessionStorage.getItem(SESSION_KEY) ?? 'null',
+    );
     return (
       typeof stored === 'object' &&
       stored !== null &&

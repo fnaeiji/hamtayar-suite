@@ -182,7 +182,9 @@ export function MetadataSettingsPage() {
   }
 
   function handleRestoreDefaults() {
-    const affected = metadataConfigService.getPotentiallyDiscardedKeys(DEFAULT_METADATA_FIELDS);
+    const affected = metadataConfigService.getPotentiallyDiscardedKeys(
+      DEFAULT_METADATA_FIELDS,
+    );
     if (!needsConfirmation(affected)) return;
     metadataConfigService.restoreDefaults();
     metadataConfigService.discardDraftValues(affected);
@@ -209,7 +211,8 @@ export function MetadataSettingsPage() {
       <p className="eyebrow">تنظیمات محلی</p>
       <h1 id="metadata-title">تنظیم فراداده</h1>
       <p className="page-intro">
-        تعریف فیلدها فقط در همین مرورگر ذخیره می‌شود و به سرویس یا کاربر دیگری منتقل نمی‌شود.
+        تعریف فیلدها فقط در همین مرورگر ذخیره می‌شود و به سرویس یا کاربر دیگری منتقل
+        نمی‌شود.
       </p>
       {state.warning && <StatusMessage tone="warning">{state.warning}</StatusMessage>}
       {error && <StatusMessage tone="error">{error}</StatusMessage>}
@@ -218,7 +221,11 @@ export function MetadataSettingsPage() {
         <button className="button button--primary" onClick={openNewField} type="button">
           افزودن فیلد
         </button>
-        <button className="button button--quiet" onClick={handleRestoreDefaults} type="button">
+        <button
+          className="button button--quiet"
+          onClick={handleRestoreDefaults}
+          type="button"
+        >
           بازگردانی پیش‌فرض‌ها
         </button>
       </div>
@@ -249,7 +256,10 @@ export function MetadataSettingsPage() {
               گروه
               <select
                 onChange={(event) =>
-                  setDraft({ ...draft, group: event.target.value as EditorDraft['group'] })
+                  setDraft({
+                    ...draft,
+                    group: event.target.value as EditorDraft['group'],
+                  })
                 }
                 value={draft.group}
               >
@@ -276,7 +286,9 @@ export function MetadataSettingsPage() {
               <label className="metadata-editor__options">
                 گزینه‌ها (هر خط: مقدار=برچسب فارسی)
                 <textarea
-                  onChange={(event) => setDraft({ ...draft, optionsText: event.target.value })}
+                  onChange={(event) =>
+                    setDraft({ ...draft, optionsText: event.target.value })
+                  }
                   rows={4}
                   value={draft.optionsText}
                 />
@@ -287,7 +299,9 @@ export function MetadataSettingsPage() {
             <label>
               <input
                 checked={draft.required}
-                onChange={(event) => setDraft({ ...draft, required: event.target.checked })}
+                onChange={(event) =>
+                  setDraft({ ...draft, required: event.target.checked })
+                }
                 type="checkbox"
               />
               الزامی
@@ -295,7 +309,9 @@ export function MetadataSettingsPage() {
             <label>
               <input
                 checked={draft.enabled}
-                onChange={(event) => setDraft({ ...draft, enabled: event.target.checked })}
+                onChange={(event) =>
+                  setDraft({ ...draft, enabled: event.target.checked })
+                }
                 type="checkbox"
               />
               فعال
@@ -342,7 +358,10 @@ export function MetadataSettingsPage() {
         </form>
       )}
 
-      <section aria-labelledby="definitions-title" className="metadata-definition-section">
+      <section
+        aria-labelledby="definitions-title"
+        className="metadata-definition-section"
+      >
         <h2 id="definitions-title">تعریف‌های موجود</h2>
         <div className="metadata-definition-list">
           {state.definitions.map((field) => (
@@ -350,8 +369,8 @@ export function MetadataSettingsPage() {
               <div>
                 <h3>{field.labelFa}</h3>
                 <p>
-                  <code dir="ltr">{field.key}</code> · {field.group === 'document' ? 'سند' : 'کاربر'} ·{' '}
-                  {field.type}
+                  <code dir="ltr">{field.key}</code> ·{' '}
+                  {field.group === 'document' ? 'سند' : 'کاربر'} · {field.type}
                 </p>
               </div>
               <div className="metadata-definition__actions">

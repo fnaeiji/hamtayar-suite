@@ -34,7 +34,11 @@ function readTimeout(
   if (value === undefined || value.trim() === '') return DEFAULT_TIMEOUT_MS;
   const parsed = Number(value);
   if (Number.isSafeInteger(parsed) && parsed > 0) return parsed;
-  issues.push({ service, setting, message: 'Timeout must be a positive whole number of milliseconds.' });
+  issues.push({
+    service,
+    setting,
+    message: 'Timeout must be a positive whole number of milliseconds.',
+  });
   return DEFAULT_TIMEOUT_MS;
 }
 
@@ -51,7 +55,11 @@ function readBaseUrl(
     if (parsed.username || parsed.password) throw new Error();
     return parsed.toString().replace(/\/$/, '');
   } catch {
-    issues.push({ service, setting, message: 'Enter a valid HTTP(S) URL without embedded credentials.' });
+    issues.push({
+      service,
+      setting,
+      message: 'Enter a valid HTTP(S) URL without embedded credentials.',
+    });
     return undefined;
   }
 }
@@ -60,23 +68,35 @@ function isLoopback(url: string | undefined): boolean {
   if (!url) return false;
   try {
     const hostname = new URL(url).hostname.toLowerCase();
-    return hostname === 'localhost' || hostname === '::1' || hostname === '[::1]' || /^127(?:\.\d{1,3}){3}$/.test(hostname);
+    return (
+      hostname === 'localhost' ||
+      hostname === '::1' ||
+      hostname === '[::1]' ||
+      /^127(?:\.\d{1,3}){3}$/.test(hostname)
+    );
   } catch {
     return false;
   }
 }
 
-export function parseServicesConfig(
-  env: Record<string, string | undefined>,
-): { config: ServicesConfig; issues: ServiceConfigIssue[] } {
+export function parseServicesConfig(env: Record<string, string | undefined>): {
+  config: ServicesConfig;
+  issues: ServiceConfigIssue[];
+} {
   const issues: ServiceConfigIssue[] = [];
-  const hamtayarUrl = readBaseUrl(env.VITE_HAMTAYAR_BASE_URL, 'VITE_HAMTAYAR_BASE_URL', issues, 'hamtayar');
+  const hamtayarUrl = readBaseUrl(
+    env.VITE_HAMTAYAR_BASE_URL,
+    'VITE_HAMTAYAR_BASE_URL',
+    issues,
+    'hamtayar',
+  );
   const cgcUrl = readBaseUrl(env.VITE_CGC_BASE_URL, 'VITE_CGC_BASE_URL', issues, 'cgc');
   if (cgcUrl && !isLoopback(cgcUrl)) {
     issues.push({
       service: 'cgc',
       setting: 'VITE_CGC_BASE_URL',
-      message: 'CGC is unauthenticated and must use an explicitly configured loopback target.',
+      message:
+        'CGC is unauthenticated and must use an explicitly configured loopback target.',
     });
   }
   const uploadText = env.VITE_HAMTAYAR_MAX_UPLOAD_BYTES?.trim();
@@ -99,7 +119,8 @@ export function parseServicesConfig(
     issues.push({
       service: 'hamtayar',
       setting: 'VITE_HAMTAYAR_MAX_UPLOAD_BYTES_VERIFIED',
-      message: 'Confirm the upload limit against the configured service before enabling uploads.',
+      message:
+        'Confirm the upload limit against the configured service before enabling uploads.',
     });
   }
 

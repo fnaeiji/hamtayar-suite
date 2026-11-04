@@ -1,0 +1,66 @@
+import { cleanup, render, screen, within, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { afterEach, expect, it, vi } from 'vitest';
+import { ModeProvider } from '../../src/app/ModeProvider';
+import { AppRoutes } from '../../src/app/router';
+import { operationManager } from '../../src/services/operations/operationManager';
+import { documentsService } from '../../src/features/documents/documentsService';
+import { metadataConfigService } from '../../src/services/metadata/metadataConfigService';
+import type { DocumentResult } from '../../src/features/documents/documentTypes';
+afterEach(() => {
+  cleanup();
+  operationManager.logout();
+  sessionStorage.clear();
+  vi.restoreAllMocks();
+});
+it('logs in, retains a pending document across navigation, and clears it on logout', async () => {
+  let finish!: (result: DocumentResult) => void;
+  vi.spyOn(documentsService, 'runDemo').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const fetchSpy = vi.spyOn(window, 'fetch');
+  const user = userEvent.setup();
+  render(
+    <ModeProvider>
+      <MemoryRouter>
+        <AppRoutes />
+      </MemoryRouter>
+    </ModeProvider>,
+  );
+  await user.type(screen.getByLabelText('نام کاربری'), 'demo');
+  await user.type(screen.getByLabelText('گذرواژه'), 'Hamtayar123!');
+  await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
+  await user.click(screen.getByRole('link', { name: 'ورود اسناد', exact: true }));
+  await user.upload(
+    screen.getByLabelText('انتخاب اسناد'),
+    new File(['sample'], 'guide.txt'),
+  );
+  await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'manuals');
+  await user.type(
+    within(screen.getByRole('article', { name: 'guide.txt' })).getByLabelText('پروژه'),
+    'alpha',
+  );
+  await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+  expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
+  await user.click(screen.getByRole('link', { name: 'تنظیم فراداده', exact: true }));
+  expect(
+    metadataConfigService.getPotentiallyDiscardedKeys(
+      metadataConfigService.getSnapshot().definitions.filter((f) => f.key !== 'project'),
+    ),
+  ).toContain('project');
+  finish({
+    provenance: 'fixture',
+    label: 'نمونه تکمیل شد',
+    status: 'completed',
+    message: 'sample',
+  });
+  await user.click(screen.getByRole('link', { name: 'ورود اسناد', exact: true }));
+  expect(await screen.findByText('نمونه تکمیل شد')).toBeVisible();
+  expect(fetchSpy).not.toHaveBeenCalled();
+  await user.click(screen.getByRole('button', { name: 'خروج' }));
+  await waitFor(() => expect(operationManager.getSnapshot()).toHaveLength(0));
+});
