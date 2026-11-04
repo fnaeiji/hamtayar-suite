@@ -45,3 +45,13 @@ their upstream formatting.
   focus, keyboard and target viewport checks remain pending.
 - T044: all automated commands and preview HTTP smoke pass; complete interactive
   quickstart verification remains pending alongside T043. No full acceptance claim.
+
+## UI revision verification — 2026-11-04
+
+- 51 tests passed across 14 files, including exact visible profile, stale-field
+  omission, removed settings navigation, code UI link and URL validation.
+- Existing metadata settings unit tests still run, though that page is no longer routed.
+- Code UI destination/port and visual palette were read from the repository's
+  `CGC/HamtayarDemo/frontend/src/style.css`, `README.md` and `scripts/start-dev.ps1`.
+- Browser visual checks and real HamtayarDemo navigation on the user's computer
+  remain unverified; the earlier browser-runtime limitation still applies.

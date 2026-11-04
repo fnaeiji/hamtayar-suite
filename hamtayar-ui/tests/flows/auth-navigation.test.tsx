@@ -50,7 +50,7 @@ function OperationHarness() {
       <p>حالت فعلی: {mode === 'demo' ? 'نمایشی' : 'API'}</p>
       <p>عملیات: {operation?.status ?? 'بدون عملیات'}</p>
       <button onClick={() => navigate('/codebase')} type="button">
-        رفتن به پایگاه کد
+        رفتن به همتایار کد
       </button>
       <button onClick={() => navigate('/')} type="button">
         بازگشت به نمای کلی
@@ -140,11 +140,14 @@ describe('demo login and navigation flow', () => {
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
 
     expect(screen.getByLabelText('حالت اجرا')).toHaveValue('demo');
+    expect(screen.getByRole('link', { name: 'همتایار کد' })).toHaveAttribute(
+      'href',
+      'http://127.0.0.1:5173/',
+    );
+    expect(screen.queryByRole('link', { name: 'تنظیم فراداده' })).not.toBeInTheDocument();
     for (const [linkName, heading] of [
-      ['پایگاه کد', 'پایگاه کد'],
       ['ورود اسناد', 'ورود اسناد'],
       ['پرسش‌وپاسخ', 'پرسش‌وپاسخ'],
-      ['تنظیم فراداده', 'تنظیم فراداده'],
       ['نمای کلی', 'به دموی همتایار خوش آمدید'],
     ]) {
       await user.click(screen.getByRole('link', { name: new RegExp(linkName) }));
@@ -183,8 +186,8 @@ describe('demo login and navigation flow', () => {
     expect(screen.getByText('عملیات: pending')).toBeVisible();
     expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
 
-    await user.click(screen.getByRole('button', { name: 'رفتن به پایگاه کد' }));
-    expect(await screen.findByRole('heading', { name: 'پایگاه کد' })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'رفتن به همتایار کد' }));
+    expect(await screen.findByRole('heading', { name: 'همتایار کد' })).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'بازگشت به نمای کلی' }));
     expect(screen.getByText('عملیات: pending')).toBeVisible();
 

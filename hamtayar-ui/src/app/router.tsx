@@ -7,7 +7,6 @@ import { QAPage } from '../features/qa/QAPage';
 import { CodebasePage } from '../features/codebase/CodebasePage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { OverviewPage } from '../features/overview/OverviewPage';
-import { MetadataSettingsPage } from '../features/metadata/MetadataSettingsPage';
 
 export function AppRoutes() {
   return (
@@ -21,10 +20,10 @@ export function AppRoutes() {
         }
       >
         <Route index element={<OverviewPage />} />
-        <Route path="codebase" element={<CodebasePage showMode={false} />} />
+        <Route path="codebase" element={<CodebasePage />} />
         <Route path="documents" element={<DocumentIngestionPage showMode={false} />} />
         <Route path="qa" element={<QAPage showMode={false} />} />
-        <Route path="settings/metadata" element={<MetadataSettingsPage />} />
+        <Route path="settings/metadata" element={<Navigate to="/" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

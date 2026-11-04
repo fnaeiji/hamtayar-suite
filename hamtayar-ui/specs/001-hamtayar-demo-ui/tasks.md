@@ -246,3 +246,12 @@ portion of T044 remain pending because the browser runtime could not be installe
 Automated checks pass (49 tests, lint, types, format, build), and production preview
 returned HTTP 200. See `docs/verification.md` and `docs/integration-map.md`.
 All API controls remain disabled; no connected-and-tested claim is made.
+
+## User-requested UI revision — 2026-11-04
+
+- [X] R001 Match the navy/blue HamtayarDemo theme, sidebar, hero and workspace cards.
+- [X] R002 Rename the code workspace to «همتایار کد» and link directly to the existing local HamtayarDemo UI; separate main dev port 5174 from code UI 5173.
+- [X] R003 Fix active document/query metadata to center and document type; add descriptive person access level to the question form and exclude old browser fields.
+- [X] R004 Remove metadata settings navigation and redirect its old route.
+- [X] R005 Update navigation, profile and link tests, and document how to run both apps.
+- [ ] R006 Visually verify 1366×768 and 390px in a browser and exercise the running HamtayarDemo on the user's machine; no live access is available here.

@@ -77,7 +77,7 @@ describe('document ingestion Demo flow', () => {
     const picker = await screen.findByLabelText('انتخاب اسناد');
     await user.upload(picker, [file('one.pdf'), file('two.pdf')]);
     await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
-    await user.type(screen.getByLabelText('پروژه مشترک'), 'alpha');
+    await user.type(screen.getByLabelText('مرکز مشترک'), 'alpha');
 
     const firstCard = screen.getByRole('article', { name: 'one.pdf' });
     const secondCard = screen.getByRole('article', { name: 'two.pdf' });
@@ -86,12 +86,12 @@ describe('document ingestion Demo flow', () => {
       expect.stringMatching(/.+/),
     );
     expect(within(firstCard).getByLabelText('فضای دانشی')).toHaveValue('team-docs');
-    expect(within(secondCard).getByLabelText('پروژه')).toHaveValue('alpha');
+    expect(within(secondCard).getByLabelText('مرکز')).toHaveValue('alpha');
 
-    await user.clear(within(secondCard).getByLabelText('پروژه'));
-    await user.type(within(secondCard).getByLabelText('پروژه'), 'beta');
-    expect(within(firstCard).getByLabelText('پروژه')).toHaveValue('alpha');
-    expect(within(secondCard).getByLabelText('پروژه')).toHaveValue('beta');
+    await user.clear(within(secondCard).getByLabelText('مرکز'));
+    await user.type(within(secondCard).getByLabelText('مرکز'), 'beta');
+    expect(within(firstCard).getByLabelText('مرکز')).toHaveValue('alpha');
+    expect(within(secondCard).getByLabelText('مرکز')).toHaveValue('beta');
   });
 
   it('previews and clears intended request data', async () => {

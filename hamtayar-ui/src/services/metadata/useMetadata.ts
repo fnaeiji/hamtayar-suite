@@ -1,12 +1,5 @@
-import { useEffect, useSyncExternalStore } from 'react';
-import { metadataConfigService } from './metadataConfigService';
+import { DEMO_METADATA_FIELDS } from '../../config/demoProfile';
+/** Fixed presentation profile; previous browser definitions cannot add hidden fields. */
 export function useMetadata() {
-  const state = useSyncExternalStore(
-    metadataConfigService.subscribe,
-    metadataConfigService.getSnapshot,
-  );
-  useEffect(() => {
-    if (!metadataConfigService.getSnapshot().loaded) metadataConfigService.load();
-  }, []);
-  return state;
+  return { definitions: DEMO_METADATA_FIELDS, warning: undefined as string | undefined };
 }

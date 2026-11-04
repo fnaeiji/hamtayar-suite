@@ -1,63 +1,79 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { signOut } from '../features/auth/authService';
 import { ModeSelector } from '../components/common/ModeSelector';
-
+import { WorkspaceIcon } from '../components/common/WorkspaceIcon';
+import { codeWorkspaceUrl } from '../config/codeWorkspace';
 const navigation = [
-  { to: '/', label: 'نمای کلی', end: true },
-  { to: '/codebase', label: 'پایگاه کد' },
-  { to: '/documents', label: 'ورود اسناد' },
-  { to: '/qa', label: 'پرسش‌وپاسخ' },
-  { to: '/settings/metadata', label: 'تنظیم فراداده' },
+  { to: '/', label: 'نمای کلی', icon: 'overview' },
+  { to: '/documents', label: 'ورود اسناد', icon: 'documents' },
+  { to: '/qa', label: 'پرسش‌وپاسخ', icon: 'qa' },
 ];
-
 export function DashboardLayout() {
   const navigate = useNavigate();
-
-  function handleLogout() {
-    signOut();
-    navigate('/login', { replace: true });
-  }
-
   return (
     <div className="dashboard-shell">
-      <header className="dashboard-header">
+      <aside className="sidebar" aria-label="پیمایش اصلی">
         <div className="dashboard-brand">
-          <span className="dashboard-brand__mark" aria-hidden="true">
-            ه
+          <span className="dashboard-brand__mark">
+            <WorkspaceIcon kind="code" />
           </span>
           <div>
             <strong>همتایار</strong>
-            <span>محیط آزمایشی</span>
+            <span dir="ltr">KNOWLEDGE WORKSPACE</span>
           </div>
         </div>
-        <div className="dashboard-header__actions">
-          <ModeSelector />
-          <button className="button button--quiet" onClick={handleLogout} type="button">
-            خروج
-          </button>
+        <p className="workspace-label">فضاهای کاری</p>
+        <nav>
+          {navigation.map(({ to, label, icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === '/'}
+              className={({ isActive }) =>
+                `nav-link${isActive ? ' nav-link--active' : ''}`
+              }
+            >
+              <WorkspaceIcon kind={icon} />
+              {label}
+            </NavLink>
+          ))}
+          <a className="nav-link" href={codeWorkspaceUrl ?? '/codebase'}>
+            <WorkspaceIcon kind="code" />
+            <span>همتایار کد</span>
+            <span className="external-arrow" aria-hidden="true">
+              ↖
+            </span>
+          </a>
+        </nav>
+        <div className="sidebar-bottom">
+          <span className="environment-dot" />
+          محیط آزمایشی<small>دانش سازمان، در یک فضای مشترک</small>
         </div>
-      </header>
-
-      <div className="dashboard-body">
-        <aside className="sidebar" aria-label="پیمایش اصلی">
-          <nav>
-            {navigation.map(({ to, label, end }) => (
-              <NavLink
-                className={({ isActive }) =>
-                  `nav-link${isActive ? ' nav-link--active' : ''}`
-                }
-                end={end}
-                key={to}
-                to={to}
-              >
-                {label}
-              </NavLink>
-            ))}
-          </nav>
-        </aside>
+      </aside>
+      <div className="dashboard-workspace">
+        <header className="dashboard-header">
+          <div>
+            <span className="eyebrow">HAMTAYAR / WORKSPACE</span>
+            <span className="header-caption">فضای دانش سازمان</span>
+          </div>
+          <div className="dashboard-header__actions">
+            <ModeSelector />
+            <button
+              className="button button--quiet"
+              onClick={() => {
+                signOut();
+                navigate('/login', { replace: true });
+              }}
+              type="button"
+            >
+              خروج
+            </button>
+          </div>
+        </header>
         <main className="dashboard-main">
           <Outlet />
         </main>
+        <footer className="workspace-footer">همتایار · محیط آزمایشی مدیریت دانش</footer>
       </div>
     </div>
   );

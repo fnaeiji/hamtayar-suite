@@ -62,3 +62,12 @@ Diagnostics only consume mapped DTOs and redact sensitive field names recursivel
 Trusted Padeen authentication, real Q&A execution, custom metadata ingestion,
 backend-enforced retrieval filters, parser readiness and CGC integration remain
 external dependencies. No operation is classified as **Connected and tested**.
+
+## Current UI revision
+
+«همتایار کد» is now a direct browser navigation to the existing HamtayarDemo
+frontend (default loopback port 5173), not the earlier code fixture or a CGC API
+integration. Main UI uses strict dev port 5174. The link does not start services or
+establish their readiness. A launch-help route remains at `/codebase`.
+Document/Q&A UI metadata is restricted to `center` and `document_type`; descriptive
+`person_access_level` is not an ACL and never bypasses backend authentication.

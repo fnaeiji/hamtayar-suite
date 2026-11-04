@@ -95,7 +95,7 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
         }}
       >
         <fieldset disabled={!canSwitchMode}>
-          <legend>پرسش و اطلاعات توصیفی</legend>
+          <legend>پرسش شما</legend>
           <label htmlFor="question">پرسش شما</label>
           <textarea
             id="question"
@@ -104,8 +104,8 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
             onChange={(e) => store.set({ question: e.target.value, preview: undefined })}
             aria-describedby={state.error ? 'qa-error' : undefined}
           />
-          <h2>اطلاعات توصیفی کاربر</h2>
-          <p>این اطلاعات هویت یا مجوز دسترسی نیستند.</p>
+          <h2>دسترسی فرد</h2>
+          <p>سطح واردشده در این دمو، مجوز واقعی ایجاد نمی‌کند.</p>
           <MetadataFields
             definitions={definitions}
             group="user"
@@ -114,7 +114,7 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
               store.set({ user: { ...state.user, [key]: value }, preview: undefined })
             }
           />
-          <h2>فیلتر اسناد</h2>
+          <h2>محدوده اسناد</h2>
           <p>
             شرط‌های فیلدهای مختلف با «و» ترکیب می‌شوند؛ چند مقدار در یک فیلد یعنی «یکی
             از».

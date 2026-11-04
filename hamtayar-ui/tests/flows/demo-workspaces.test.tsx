@@ -41,17 +41,13 @@ it('logs in, retains a pending document across navigation, and clears it on logo
   );
   await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'manuals');
   await user.type(
-    within(screen.getByRole('article', { name: 'guide.txt' })).getByLabelText('پروژه'),
+    within(screen.getByRole('article', { name: 'guide.txt' })).getByLabelText('مرکز'),
     'alpha',
   );
   await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
   expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
-  await user.click(screen.getByRole('link', { name: 'تنظیم فراداده', exact: true }));
-  expect(
-    metadataConfigService.getPotentiallyDiscardedKeys(
-      metadataConfigService.getSnapshot().definitions.filter((f) => f.key !== 'project'),
-    ),
-  ).toContain('project');
+  await user.click(screen.getByRole('link', { name: 'پرسش‌وپاسخ', exact: true }));
+  expect(metadataConfigService.getDraftValues().center).toBe('alpha');
   finish({
     provenance: 'fixture',
     label: 'نمونه تکمیل شد',

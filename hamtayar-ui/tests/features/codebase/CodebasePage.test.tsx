@@ -1,31 +1,20 @@
-import { cleanup, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { afterEach, expect, it, vi } from 'vitest';
-import { ModeProvider } from '../../../src/app/ModeProvider';
+import { render, screen, cleanup } from '@testing-library/react';
+import { afterEach, expect, it } from 'vitest';
 import { CodebasePage } from '../../../src/features/codebase/CodebasePage';
-import { operationManager } from '../../../src/services/operations/operationManager';
-afterEach(() => {
-  cleanup();
-  operationManager.logout();
-  vi.restoreAllMocks();
+import { parseCodeWorkspaceUrl } from '../../../src/config/codeWorkspace';
+afterEach(cleanup);
+it('links to the existing local HamtayarDemo rather than running a code fixture', () => {
+  render(<CodebasePage />);
+  expect(screen.getByRole('link', { name: 'باز کردن همتایار کد ↖' })).toHaveAttribute(
+    'href',
+    'http://127.0.0.1:5173/',
+  );
+  expect(
+    screen.queryByRole('button', { name: 'اجرای نمایش کد' }),
+  ).not.toBeInTheDocument();
 });
-it('runs labeled archive fixtures offline and blocks unverified API', async () => {
-  const user = userEvent.setup();
-  const spy = vi.spyOn(window, 'fetch');
-  render(
-    <ModeProvider>
-      <CodebasePage />
-    </ModeProvider>,
-  );
-  await user.upload(
-    screen.getByLabelText('آرشیو کد'),
-    new File(['sample'], 'project.zip'),
-  );
-  await user.type(screen.getByLabelText('نام پروژه'), 'sample');
-  await user.click(screen.getByRole('button', { name: 'اجرای نمایش کد' }));
-  expect(await screen.findByText(/نمایش نمونه پایان یافت/)).toBeVisible();
-  expect(spy).not.toHaveBeenCalled();
-  await user.selectOptions(screen.getByRole('combobox', { name: 'حالت اجرا' }), 'api');
-  expect(screen.getByRole('button', { name: 'پردازش در سرویس' })).toBeDisabled();
-  expect(screen.getByText(/CGC/)).toBeVisible();
+it('rejects unsafe and nonlocal code UI addresses', () => {
+  expect(parseCodeWorkspaceUrl('javascript:alert(1)')).toBeUndefined();
+  expect(parseCodeWorkspaceUrl('https://example.org')).toBeUndefined();
+  expect(parseCodeWorkspaceUrl('http://localhost:5173')).toBe('http://localhost:5173/');
 });

@@ -231,3 +231,22 @@ A developer or tester uses API mode to exercise only verified, available service
 - New ingestion/retrieval workflows, embedding or chunking work, domain retrieval filters, replacement pipelines, or a general code processing gateway.
 - Full document management, persistent chat, real-time streaming, or production deployment.
 - Automatic commits, pushes, repository moves, constitution replacement, or backend domain changes.
+
+## Approved presentation revision — 2026-11-04
+
+The user's later request supersedes the earlier visible metadata/settings/codebase
+Demo requirements for this iteration:
+
+- Match the existing dark navy/blue CGC/HamtayarDemo UI and sidebar/card layout.
+- Replace the code workspace name with «همتایار کد». Navigation and its overview
+  action open the existing local CGC/HamtayarDemo frontend in the same tab.
+  The `/codebase` route provides launch instructions. No API embedding or automatic
+  process startup is implied. Main UI dev port is 5174; existing code UI stays 5173.
+- Documents and question filters show exactly `center` (Persian label «مرکز», free
+  text pending actual organizational choices) and `document_type`.
+- The question form has a separate descriptive `person_access_level` field. It is
+  not trusted identity, access scope or an enforced permission.
+- Hide metadata settings navigation; redirect its previous route to Overview.
+  Retain old browser settings without consuming them in this fixed presentation profile.
+- Previous dynamic settings components/tests remain reusable but are not routed.
+  Previous codebase fixture modules are not used by the active code workspace.
