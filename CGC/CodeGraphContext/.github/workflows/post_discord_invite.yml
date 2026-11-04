@@ -1,0 +1,50 @@
+name: Post Discord Invite on Issue or PR
+
+permissions:
+  issues: write
+  pull-requests: write
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  post_discord_invite:
+    # Always run the job so the check stays green; skip posting only for fork PRs
+    # inside the script (exit 0) instead of skipping the whole job (which made
+    # GitHub report "No jobs were run" -> failure on fork-PR runs).
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post Discord Invite Comment
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const discord_link = "https://discord.gg/dR4QY32uYQ";
+
+            // Fork PRs: don't post the invite, but keep the check green.
+            if (context.payload.pull_request && context.payload.pull_request.head.repo.fork) {
+              console.log("Fork PR — skipping Discord invite. Exiting.");
+              return;
+            }
+
+            let number;
+            if (context.payload.issue) {
+              number = context.payload.issue.number;
+            } else if (context.payload.pull_request) {
+              number = context.payload.pull_request.number;
+            } else {
+              console.log("No issue or PR found. Exiting.");
+              return;
+            }
+
+            console.log("Detected issue/PR number:", number);
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: number,
+              body: `Hi! 👋 Join our CodeGraphContext Discord channel to collaborate: ${discord_link}`
+            });

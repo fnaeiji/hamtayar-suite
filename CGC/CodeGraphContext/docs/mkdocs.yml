@@ -1,0 +1,68 @@
+site_name: CodeGraphContext
+repo_url: https://github.com/CodeGraphContext/CodeGraphContext
+repo_name: CodeGraphContext/CodeGraphContext
+theme:
+  name: material
+  custom_dir: custom_theme
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - toc.follow
+
+extra_css:
+  - stylesheets/redwood.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+
+nav:
+  - Introduction: index.md
+  - Getting Started:
+    - Prerequisites: getting-started/prerequisites.md
+    - Installation: getting-started/installation.md
+    - Quickstart: getting-started/quickstart.md
+    - MCP Setup: getting-started/mcp-setup.md
+  - Core Concepts:
+    - System Architecture: concepts/architecture.md
+    - The Code Graph Model: concepts/graph-model.md
+    - Database Backends: concepts/backends.md
+    - How Ingestion Works: concepts/how-it-works.md
+  - User Guides:
+    - Indexing Codebases: guides/indexing.md
+    - Configuration Contexts: guides/contexts.md
+    - Portable CGC Bundles: guides/bundles.md
+    - Interactive Visualization: guides/visualization.md
+    - Datasource Indexing: guides/datasource-indexing.md
+    - Developer Onboarding: guides/onboarding-codebase.md
+  - Reference:
+    - CLI Reference: reference/cli.md
+    - HTTP API Reference: reference/api.md
+    - MCP Tool Reference: reference/mcp.md
+    - Configuration: reference/config.md
+    - Troubleshooting: reference/troubleshooting.md
+  - Community:
+    - Contributing: contributing.md
+    - Contributing Languages: contributing_languages.md
+    - Roadmap: roadmap.md
+    - License: license.md
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

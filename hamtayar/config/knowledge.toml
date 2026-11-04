@@ -1,0 +1,18 @@
+[chunking]
+strategy = "structure_aware"
+profile = "structure_aware_v1"
+max_tokens = 512
+overlap_tokens = 0
+oversized_content_policy = "error"
+
+[embedding]
+model_id = "BAAI/bge-m3"
+model_revision = "5617a9f61b028005a4858fdac845db406aefb181"
+# tokenizer_id and tokenizer_revision resolve from the selected model/revision.
+tokenizer_backend = "huggingface_tokenizers"
+# Omit tokenizer_cache_dir to use the Hugging Face Hub default cache.
+tokenizer_local_files_only = false
+include_special_tokens = true
+output_mode = "dense"
+dimensions = 1024
+normalize_embeddings = true

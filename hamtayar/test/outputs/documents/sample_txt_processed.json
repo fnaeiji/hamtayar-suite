@@ -1,0 +1,193 @@
+{
+  "source": {
+    "source": {
+      "source_id": "sample-document-txt",
+      "knowledge_space_id": "integration-tests",
+      "source_type": "document"
+    },
+    "version": "v1"
+  },
+  "blocks": [
+    {
+      "block_type": "paragraph",
+      "text": "﻿راهنمای آزمایشی سامانه خدمات — متن ساده",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 1,
+        "end_line": 1
+      },
+      "normalized_text": "راهنمای آزمایشی سامانه خدمات — متن ساده",
+      "block_id": "block-000001",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "این سند ساختگی صرفاً برای آزمون پردازش متن همتایار تهیه شده است.\nعَلِي كيان مسئول بررسی درخواست آزمایشی است.\nحَذفِ اِعراب باید قابل تنظیم باشد.\nسلام   دنیا\nنسخه 123 و کد آزمایشی 456 ثبت شده است.\nنمیدانم چه میگفت\nسلامممم به همه\nمتن دارای نیم‌فاصله: می‌روم، کتاب‌ها و ثبت‌نام.\nاعداد متفاوت: 123 / ۱۲۳ / ١٢٣\nEnglish text: Hamtayar sample, version v1.2.3.\nنمادها و ایموجی: + = % 👩‍💻 ✅",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 3,
+        "end_line": 13
+      },
+      "normalized_text": "این سند ساختگی صرفا برای آزمون پردازش متن همتایار تهیه شده است.\nعلی کیان مسئول بررسی درخواست آزمایشی است.\nحذف اعراب باید قابل تنظیم باشد.\nسلام دنیا\nنسخه 123 و کد آزمایشی 456 ثبت شده است.\nنمیدانم چه میگفت\nسلامممم به همه\nمتن دارای نیم‌فاصله: می‌روم، کتاب‌ها و ثبت‌نام.\nاعداد متفاوت: 123 / ۱۲۳ / ١٢٣\nEnglish text: Hamtayar sample, version v1.2.3.\nنماد‌ها و ایموجی: + = % 👩‍💻 ✅",
+      "block_id": "block-000002",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 336,
+          "end": 342,
+          "kind": "technical_identifier"
+        }
+      ]
+    },
+    {
+      "block_type": "paragraph",
+      "text": "اطلاعات درخواست\nشناسه: 123\nمسئول: علي كيان\nوضعیت: در انتظار بررسی",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 15,
+        "end_line": 18
+      },
+      "normalized_text": "اطلاعات درخواست\nشناسه: 123\nمسئول: علی کیان\nوضعیت: در انتظار بررسی",
+      "block_id": "block-000003",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "مراحل کار\nاول: دریافت اطلاعات.\nدوم: بررسی مدارک.\nسوم: اعلام نتیجه.",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 20,
+        "end_line": 23
+      },
+      "normalized_text": "مراحل کار\nاول: دریافت اطلاعات.\nدوم: بررسی مدارک.\nسوم: اعلام نتیجه.",
+      "block_id": "block-000004",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "خط دارای tab:\nنام\tوضعیت\tشناسه\nعلي\tآزمایشی\t123",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 25,
+        "end_line": 27
+      },
+      "normalized_text": "خط دارای tab:\nنام\tوضعیت\tشناسه\nعلی\tآزمایشی\t123",
+      "block_id": "block-000005",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "  این خط با دو فاصله شروع و پایان می‌یابد.  ",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 29,
+        "end_line": 29
+      },
+      "normalized_text": "  این خط با دو فاصله شروع و پایان می‌یابد.  ",
+      "block_id": "block-000006",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "کنترل NUL در کلمه: همتا\u0000یار",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 32,
+        "end_line": 32
+      },
+      "normalized_text": "کنترل NUL در کلمه: همتایار",
+      "block_id": "block-000007",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "# این علامت در TXT فقط بخشی از متن است.\nمتن دارای ستاره: **نمونه**؛ parser متن ساده نباید آن را Markdown فرض کند.",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 34,
+        "end_line": 35
+      },
+      "normalized_text": "# این علامت در TXT فقط بخشی از متن است.\nمتن دارای ستاره: **نمونه**؛ parser متن ساده نباید آن را Markdown فرض کند.",
+      "block_id": "block-000008",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "block_type": "paragraph",
+      "text": "کلیدواژه اختصاصی این فایل: آزمایش‌متن‌ساده",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 37,
+        "end_line": 37
+      },
+      "normalized_text": "کلیدواژه اختصاصی این فایل: آزمایش‌متن‌ساده",
+      "block_id": "block-000009",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    }
+  ],
+  "metadata": {
+    "parser": "txt",
+    "parser_implementation": "hamtayar-txt-parser",
+    "parser_version": "1.1.0",
+    "original_content": "﻿راهنمای آزمایشی سامانه خدمات — متن ساده\n\nاین سند ساختگی صرفاً برای آزمون پردازش متن همتایار تهیه شده است.\nعَلِي كيان مسئول بررسی درخواست آزمایشی است.\nحَذفِ اِعراب باید قابل تنظیم باشد.\nسلام   دنیا\nنسخه 123 و کد آزمایشی 456 ثبت شده است.\nنمیدانم چه میگفت\nسلامممم به همه\nمتن دارای نیم‌فاصله: می‌روم، کتاب‌ها و ثبت‌نام.\nاعداد متفاوت: 123 / ۱۲۳ / ١٢٣\nEnglish text: Hamtayar sample, version v1.2.3.\nنمادها و ایموجی: + = % 👩‍💻 ✅\n\nاطلاعات درخواست\nشناسه: 123\nمسئول: علي كيان\nوضعیت: در انتظار بررسی\n\nمراحل کار\nاول: دریافت اطلاعات.\nدوم: بررسی مدارک.\nسوم: اعلام نتیجه.\n\nخط دارای tab:\nنام\tوضعیت\tشناسه\nعلي\tآزمایشی\t123\n\n  این خط با دو فاصله شروع و پایان می‌یابد.  \n\n\nکنترل NUL در کلمه: همتا\u0000یار\n\n# این علامت در TXT فقط بخشی از متن است.\nمتن دارای ستاره: **نمونه**؛ parser متن ساده نباید آن را Markdown فرض کند.\n\nکلیدواژه اختصاصی این فایل: آزمایش‌متن‌ساده\n",
+    "original_content_semantics": "decoded UTF-8 text; file reads use universal newline conversion and this is not an exact byte copy",
+    "source_file": "test/fixtures/txt/sample_document.txt",
+    "processing.cleaning_profile": "document-cleaning-v2",
+    "processing.cleaning_config": "{\"fix_broken_urls_and_emails\":false,\"normalize_line_breaks\":true,\"normalize_whitespace\":true,\"remove_control_chars\":true,\"remove_zero_width_junk\":true,\"strip_block_text\":false}",
+    "processing.normalization_profile": "persian-hazm-normalization-v2",
+    "processing.normalization_config": "{\"apply_affix_spacing\":true,\"correct_spacing\":false,\"correct_verb_prefixes\":false,\"digit_policy\":\"preserve\",\"enabled\":true,\"normalize_punctuation\":false,\"normalize_unicode_nfc\":true,\"normalize_zwnj\":true,\"persian_style\":false,\"preserve_protected_content\":true,\"reduce_repeated_characters\":false,\"remove_diacritics\":true,\"remove_tatweel\":true,\"unify_arabic_chars\":true}",
+    "processing.hazm_version": "0.12.1"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "source": {
+    "source": {
+      "source_id": "sample-document-txt",
+      "knowledge_space_id": "integration-tests",
+      "source_type": "document"
+    },
+    "version": "v1"
+  },
+  "kind": "document",
+  "items": [
+    {
+      "text": "راهنمای آزمایشی سامانه خدمات — متن ساده",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 1,
+        "end_line": 1
+      },
+      "symbol_id": null,
+      "block_id": "block-000001",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "این سند ساختگی صرفا برای آزمون پردازش متن همتایار تهیه شده است.\nعلی کیان مسئول بررسی درخواست آزمایشی است.\nحذف اعراب باید قابل تنظیم باشد.\nسلام دنیا\nنسخه 123 و کد آزمایشی 456 ثبت شده است.\nنمیدانم چه میگفت\nسلامممم به همه\nمتن دارای نیم‌فاصله: می‌روم، کتاب‌ها و ثبت‌نام.\nاعداد متفاوت: 123 / ۱۲۳ / ١٢٣\nEnglish text: Hamtayar sample, version v1.2.3.\nنماد‌ها و ایموجی: + = % 👩‍💻 ✅",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 3,
+        "end_line": 13
+      },
+      "symbol_id": null,
+      "block_id": "block-000002",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 336,
+          "end": 342,
+          "kind": "technical_identifier"
+        }
+      ]
+    },
+    {
+      "text": "اطلاعات درخواست\nشناسه: 123\nمسئول: علی کیان\nوضعیت: در انتظار بررسی",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 15,
+        "end_line": 18
+      },
+      "symbol_id": null,
+      "block_id": "block-000003",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "مراحل کار\nاول: دریافت اطلاعات.\nدوم: بررسی مدارک.\nسوم: اعلام نتیجه.",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 20,
+        "end_line": 23
+      },
+      "symbol_id": null,
+      "block_id": "block-000004",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "خط دارای tab:\nنام\tوضعیت\tشناسه\nعلی\tآزمایشی\t123",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 25,
+        "end_line": 27
+      },
+      "symbol_id": null,
+      "block_id": "block-000005",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "  این خط با دو فاصله شروع و پایان می‌یابد.  ",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 29,
+        "end_line": 29
+      },
+      "symbol_id": null,
+      "block_id": "block-000006",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "کنترل NUL در کلمه: همتایار",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 32,
+        "end_line": 32
+      },
+      "symbol_id": null,
+      "block_id": "block-000007",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "# این علامت در TXT فقط بخشی از متن است.\nمتن دارای ستاره: **نمونه**؛ parser متن ساده نباید آن را Markdown فرض کند.",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 34,
+        "end_line": 35
+      },
+      "symbol_id": null,
+      "block_id": "block-000008",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "کلیدواژه اختصاصی این فایل: آزمایش‌متن‌ساده",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/txt/sample_document.txt",
+        "start_line": 37,
+        "end_line": 37
+      },
+      "symbol_id": null,
+      "block_id": "block-000009",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    }
+  ],
+  "access": {
+    "tenant_id": "sample-tenant",
+    "acl_principals": [
+      "sample-review-principal"
+    ]
+  },
+  "processing_profile": "structure_aware_v1"
+}

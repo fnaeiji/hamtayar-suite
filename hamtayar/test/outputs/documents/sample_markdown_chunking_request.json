@@ -1,0 +1,345 @@
+{
+  "source": {
+    "source": {
+      "source_id": "sample-document-markdown",
+      "knowledge_space_id": "integration-tests",
+      "source_type": "document"
+    },
+    "version": "v1"
+  },
+  "kind": "document",
+  "items": [
+    {
+      "text": "راهنمای آزمایشی سامانه خدمات",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 1,
+        "end_line": 1
+      },
+      "symbol_id": null,
+      "block_id": "block-000001",
+      "block_type": "heading",
+      "heading_level": 1,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "این سند ساختگی صرفا برای آزمون پردازش متن همتایار تهیه شده است.\nعلی کیان مسئول بررسی درخواست آزمایشی است.\nحذف اعراب باید قابل تنظیم باشد.\nسلام دنیا\nنسخه 123 و کد آزمایشی 456 ثبت شده است.\nنمیدانم چه میگفت\nسلامممم به همه\nمتن دارای نیم‌فاصله: می‌روم، کتاب‌ها و ثبت‌نام.\nاعداد متفاوت: 123 / ۱۲۳ / ١٢٣\nEnglish text: Hamtayar sample, version v1.2.3.\nنماد‌ها و ایموجی: + = % 👩‍💻 ✅",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 3,
+        "end_line": 13
+      },
+      "symbol_id": null,
+      "block_id": "block-000002",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 336,
+          "end": 342,
+          "kind": "technical_identifier"
+        }
+      ]
+    },
+    {
+      "text": "مراحل ثبت درخواست",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 15,
+        "end_line": 15
+      },
+      "symbol_id": null,
+      "block_id": "block-000003",
+      "block_type": "heading",
+      "heading_level": 2,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "1. فرم درخواست را تکمیل کنید.\n2. شناسه 123 را یادداشت کنید.\n3. منتظر پاسخ بمانید.\n",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 17,
+        "end_line": 19
+      },
+      "symbol_id": null,
+      "block_id": "block-000004",
+      "block_type": "list",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 0,
+          "end": 3,
+          "kind": "list_marker"
+        },
+        {
+          "start": 30,
+          "end": 33,
+          "kind": "list_marker"
+        },
+        {
+          "start": 60,
+          "end": 63,
+          "kind": "list_marker"
+        }
+      ]
+    },
+    {
+      "text": "- دریافت اطلاعات\n- بررسی مدارک\n  - بررسی نسخه فارسی\n  - بررسی نسخه English\n",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 21,
+        "end_line": 24
+      },
+      "symbol_id": null,
+      "block_id": "block-000005",
+      "block_type": "list",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 0,
+          "end": 2,
+          "kind": "list_marker"
+        },
+        {
+          "start": 17,
+          "end": 19,
+          "kind": "list_marker"
+        },
+        {
+          "start": 31,
+          "end": 35,
+          "kind": "list_marker"
+        },
+        {
+          "start": 52,
+          "end": 56,
+          "kind": "list_marker"
+        }
+      ]
+    },
+    {
+      "text": "جدول نمونه",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 26,
+        "end_line": 26
+      },
+      "symbol_id": null,
+      "block_id": "block-000006",
+      "block_type": "heading",
+      "heading_level": 3,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "| شناسه | مسئول | وضعیت |\n| --- | --- | --- |\n| 123 | علی | در انتظار |\n| 456 | کیان | بررسی شده |",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 28,
+        "end_line": 31
+      },
+      "symbol_id": null,
+      "block_id": "block-000007",
+      "block_type": "table",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "محتوای محافظت‌شده",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 33,
+        "end_line": 33
+      },
+      "symbol_id": null,
+      "block_id": "block-000008",
+      "block_type": "heading",
+      "heading_level": 2,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "[راهنمای آزمایشی](https://example.org/docs/123?q=كيان)",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 35,
+        "end_line": 35
+      },
+      "symbol_id": null,
+      "block_id": "block-000009",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 18,
+          "end": 53,
+          "kind": "url"
+        }
+      ]
+    },
+    {
+      "text": "کد درون‌خطی: `user_name = \"علي\"; code = 123`",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 37,
+        "end_line": 37
+      },
+      "symbol_id": null,
+      "block_id": "block-000010",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": [
+        {
+          "start": 13,
+          "end": 44,
+          "kind": "inline_code"
+        }
+      ]
+    },
+    {
+      "text": "user_name = \"علي\"\ncode = 123\nif code == 123:\n    print(\"ك  123\")\n",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 39,
+        "end_line": 44
+      },
+      "symbol_id": null,
+      "block_id": "block-000011",
+      "block_type": "code",
+      "heading_level": null,
+      "code_language": "python",
+      "protected_spans": []
+    },
+    {
+      "text": "> این نقل‌قول ساختگی برای آزمون ساختار سند است.",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 46,
+        "end_line": 46
+      },
+      "symbol_id": null,
+      "block_id": "block-000012",
+      "block_type": "quote",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "این خط با دو فاصله پایان می‌یابد.  \nاین خط باید شکست خط Markdown داشته باشد.",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 48,
+        "end_line": 49
+      },
+      "symbol_id": null,
+      "block_id": "block-000013",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "پایان",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 52,
+        "end_line": 52
+      },
+      "symbol_id": null,
+      "block_id": "block-000014",
+      "block_type": "heading",
+      "heading_level": 2,
+      "code_language": null,
+      "protected_spans": []
+    },
+    {
+      "text": "این پاراگراف پس از چند خط خالی قرار گرفته است.\nکلیدواژه اختصاصی این فایل: آزمایش‌مارک‌داون",
+      "location": {
+        "page": null,
+        "section": null,
+        "sheet": null,
+        "cell_range": null,
+        "file_path": "test/fixtures/markdown/sample_document.md",
+        "start_line": 54,
+        "end_line": 55
+      },
+      "symbol_id": null,
+      "block_id": "block-000015",
+      "block_type": "paragraph",
+      "heading_level": null,
+      "code_language": null,
+      "protected_spans": []
+    }
+  ],
+  "access": {
+    "tenant_id": "sample-tenant",
+    "acl_principals": [
+      "sample-review-principal"
+    ]
+  },
+  "processing_profile": "structure_aware_v1"
+}
