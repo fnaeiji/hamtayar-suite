@@ -1,5 +1,4 @@
-import { useEffect, useId } from 'react';
-import { metadataConfigService } from '../../services/metadata/metadataConfigService';
+import { useId } from 'react';
 import type {
   MetadataFieldDefinition,
   MetadataFieldValue,
@@ -30,13 +29,6 @@ export function MetadataFields({
       (!group || field.group === group) &&
       (!queryFilters || (field.group === 'document' && field.filterable)),
   );
-
-  useEffect(() => {
-    metadataConfigService.setDraftValues(ownerId, values, (discardedKeys) => {
-      for (const key of discardedKeys) onChange(key, '');
-    });
-    return () => metadataConfigService.removeDraftValues(ownerId);
-  }, [onChange, ownerId, values]);
 
   return (
     <div className="metadata-fields">

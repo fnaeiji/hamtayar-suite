@@ -6,7 +6,7 @@ import type {
 import {
   filterActiveMetadataValues,
   validateMetadataValues,
-} from '../../services/metadata/metadataConfigService';
+} from '../../services/metadata/values';
 export type QueryModel = {
   question: string;
   user_metadata: MetadataValues;

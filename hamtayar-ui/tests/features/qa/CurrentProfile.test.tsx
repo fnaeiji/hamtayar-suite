@@ -1,10 +1,10 @@
-import { render, screen, cleanup, within } from '@testing-library/react';
+import { render, screen, cleanup, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
 import { ModeProvider } from '../../../src/app/ModeProvider';
 import { QAPage } from '../../../src/features/qa/QAPage';
 import { DocumentIngestionPage } from '../../../src/features/documents/DocumentIngestionPage';
-import { registeredCenters } from '../../../src/services/metadata/registeredCenters';
+import { documentCatalog } from '../../../src/services/documentCatalog';
 import { operationManager } from '../../../src/services/operations/operationManager';
 import { documentsService } from '../../../src/features/documents/documentsService';
 afterEach(() => {
@@ -13,7 +13,13 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 it('shows exactly two prompt comboboxes with matching classification choices', async () => {
-  registeredCenters.add('مرکز الف');
+  documentCatalog.register({
+    sourceId: 'seed',
+    name: 'seed.txt',
+    center: 'مرکز الف',
+    classification: 'normal',
+    text: 'متن',
+  });
   const user = userEvent.setup();
   render(
     <ModeProvider>
@@ -71,10 +77,10 @@ it('adds only successful document centers, deduplicates them, and keeps them aft
       'normal',
     );
   }
-  expect(registeredCenters.get()).toEqual([]);
+  expect(documentCatalog.get().centers).toEqual([]);
   await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
   await screen.findByText('نمونه این فایل با خطا روبه‌رو شد.');
-  expect(registeredCenters.get()).toEqual(['مرکز الف']);
+  await waitFor(() => expect(documentCatalog.get().centers).toEqual(['مرکز الف']));
   await user.click(screen.getByRole('button', { name: 'پاک کردن' }));
   docs.unmount();
   render(
@@ -88,7 +94,7 @@ it('adds only successful document centers, deduplicates them, and keeps them aft
       .map((o) => o.textContent),
   ).toEqual(['انتخاب کنید', 'مرکز الف']);
   operationManager.logout();
-  expect(registeredCenters.get()).toEqual([]);
+  expect(documentCatalog.get().centers).toEqual([]);
 });
 it('shows an empty center list before any successful registration', () => {
   render(

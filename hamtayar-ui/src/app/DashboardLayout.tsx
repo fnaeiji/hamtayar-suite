@@ -1,70 +1,96 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { signOut } from '../features/auth/authService';
 import { ModeSelector } from '../components/common/ModeSelector';
 import { WorkspaceIcon } from '../components/common/WorkspaceIcon';
-import { codeWorkspaceUrl } from '../config/codeWorkspace';
-const navigation = [
-  { to: '/', label: 'نمای کلی', icon: 'overview' },
-  { to: '/documents', label: 'ورود اسناد', icon: 'documents' },
-  { to: '/qa', label: 'پرسش‌وپاسخ', icon: 'qa' },
-];
+import { codePages } from '../features/codebase/navigation';
+import { workspaces } from './workspaces';
 export function DashboardLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isCode = location.pathname.startsWith('/codebase');
   return (
     <div className="dashboard-shell">
       <aside className="sidebar" aria-label="پیمایش اصلی">
-        <div className="dashboard-brand">
+        <NavLink to="/" className="dashboard-brand" aria-label="خانه همتایار">
           <span className="dashboard-brand__mark">
             <WorkspaceIcon kind="overview" />
           </span>
           <div>
             <strong>همتایار</strong>
-            <span dir="ltr">KNOWLEDGE WORKSPACE</span>
+            <span>فضای یکپارچه دانش سازمان</span>
           </div>
-        </div>
-        <p className="workspace-label">فضاهای کاری</p>
-        <nav>
-          {navigation.map(({ to, label, icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) =>
-                `nav-link${isActive ? ' nav-link--active' : ''}`
-              }
-            >
-              <WorkspaceIcon kind={icon} />
-              {label}
-            </NavLink>
+        </NavLink>
+        <p className="workspace-label">دسترسی به فضاهای کاری</p>
+        <nav aria-label="بخش‌های داشبورد">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
+          >
+            <WorkspaceIcon kind="overview" />
+            داشبورد
+          </NavLink>
+          {workspaces.map((workspace) => (
+            <div key={workspace.to}>
+              <NavLink
+                to={workspace.to}
+                className={({ isActive }) =>
+                  `nav-link${isActive || (workspace.icon === 'code' && isCode) ? ' nav-link--active' : ''}`
+                }
+                aria-expanded={workspace.icon === 'code' ? isCode : undefined}
+              >
+                <WorkspaceIcon kind={workspace.icon} />
+                <span>{workspace.title}</span>
+                {workspace.icon === 'code' && (
+                  <span className="submenu-caret" aria-hidden="true">
+                    {isCode ? '⌄' : '‹'}
+                  </span>
+                )}
+              </NavLink>
+              {workspace.icon === 'code' && isCode && (
+                <nav className="code-submenu" aria-label="زیرمنوهای پردازش کدبیس">
+                  {codePages.map(([id, label]) => (
+                    <NavLink
+                      key={id}
+                      to={'/codebase/' + id}
+                      className={({ isActive }) =>
+                        isActive ? 'code-submenu__active' : ''
+                      }
+                    >
+                      {label}
+                    </NavLink>
+                  ))}
+                </nav>
+              )}
+            </div>
           ))}
-          <a className="nav-link" href={codeWorkspaceUrl ?? '/codebase'}>
-            <WorkspaceIcon kind="code" />
-            <span>همتایار کد</span>
-            <span className="external-arrow" aria-hidden="true">
-              ↖
-            </span>
-          </a>
         </nav>
         <div className="sidebar-bottom">
           <span className="environment-dot" />
-          محیط آزمایشی<small>دانش سازمان، در یک فضای مشترک</small>
+          محیط آزمایشی<small>اسناد و کد، در یک داشبورد</small>
         </div>
       </aside>
       <div className="dashboard-workspace">
         <header className="dashboard-header">
           <div>
-            <span className="eyebrow">HAMTAYAR / WORKSPACE</span>
-            <span className="header-caption">فضای دانش سازمان</span>
+            <span className="eyebrow">HAMTAYAR / KNOWLEDGE PLATFORM</span>
+            <span className="header-caption">
+              {isCode ? 'همتایار کد' : 'سامانه دانش سازمانی همتایار'}
+            </span>
           </div>
           <div className="dashboard-header__actions">
-            <ModeSelector />
+            {isCode ? (
+              <span className="quiet-badge">سرویس محلی پردازش کد</span>
+            ) : (
+              <ModeSelector />
+            )}
             <button
               className="button button--quiet"
+              type="button"
               onClick={() => {
                 signOut();
                 navigate('/login', { replace: true });
               }}
-              type="button"
             >
               خروج
             </button>
@@ -73,7 +99,7 @@ export function DashboardLayout() {
         <main className="dashboard-main">
           <Outlet />
         </main>
-        <footer className="workspace-footer">همتایار · محیط آزمایشی مدیریت دانش</footer>
+        <footer className="workspace-footer">همتایار · فضای یکپارچه اسناد و کد</footer>
       </div>
     </div>
   );

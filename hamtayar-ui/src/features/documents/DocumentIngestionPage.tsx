@@ -1,12 +1,15 @@
 import { useMode } from '../../app/ModeProvider';
 import { ModeSelector } from '../../components/common/ModeSelector';
-import { registeredCenters } from '../../services/metadata/registeredCenters';
-import { useMetadata } from '../../services/metadata/useMetadata';
 import {
-  metadataConfigService,
+  documentCatalog,
+  prepareLocalDocument,
+  type LocalDocument,
+} from '../../services/documentCatalog';
+import { DEMO_METADATA_FIELDS } from '../../config/demoProfile';
+import {
   filterActiveMetadataValues,
   validateMetadataValues,
-} from '../../services/metadata/metadataConfigService';
+} from '../../services/metadata/values';
 import { createWorkspaceStore } from '../../services/operations/workspaceStore';
 import { runOperation } from '../../services/operations/operationService';
 import {
@@ -26,34 +29,10 @@ const store = createWorkspaceStore(() => ({
   preview: false,
   reduced: false,
 }));
-const registeredDrafts = new Set<string>();
-store.observe(() => {
-  const state = store.get();
-  for (const id of registeredDrafts) metadataConfigService.removeDraftValues(id);
-  registeredDrafts.clear();
-  for (const draft of state.drafts) {
-    const owner = `document-store-${draft.id}`;
-    registeredDrafts.add(owner);
-    metadataConfigService.setDraftValues(owner, draft.customMetadata, (keys) => {
-      store.set({
-        drafts: store.get().drafts.map((d) =>
-          d.id !== draft.id
-            ? d
-            : {
-                ...d,
-                customMetadata: Object.fromEntries(
-                  Object.entries(d.customMetadata).filter(([key]) => !keys.includes(key)),
-                ),
-              },
-        ),
-      });
-    });
-  }
-});
 export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean }) {
   const state = store.use();
   const { mode, canSwitchMode } = useMode();
-  const { definitions, warning } = useMetadata();
+  const definitions = DEMO_METADATA_FIELDS;
   const gate = hamtayarReadiness('documents');
   function add(files: File[]) {
     if (!canSwitchMode) return;
@@ -73,7 +52,6 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
         version: '1',
         processingProfile: 'default',
         customMetadata: {},
-        overrides: [],
       });
     }
     store.set({
@@ -104,31 +82,33 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
     store.set({ error: '' });
     await Promise.all(
       activeDrafts.map(async (d) => {
+        let localDocument: LocalDocument | undefined;
         const result = await runOperation(
           d.id,
           mode,
-          (signal) =>
-            mode === 'demo'
-              ? documentsService.runDemo(d)
-              : ingestDocument(d, state.reduced, signal),
+          async (signal) => {
+            if (mode === 'api') return ingestDocument(d, state.reduced, signal);
+            const result = await documentsService.runDemo(d);
+            localDocument = await prepareLocalDocument(d, signal);
+            return result;
+          },
           true,
         );
-        if (result?.status === 'completed' && mode === 'demo')
-          registeredCenters.add(d.customMetadata.center);
+        if (result?.status === 'completed' && localDocument)
+          documentCatalog.register(localDocument);
       }),
     );
   }
   return (
     <section className="page-content">
       <p className="eyebrow">فضای اسناد</p>
-      <h1>ورود اسناد</h1>
+      <h1>پردازش اسناد سازمانی</h1>
       {showMode && <ModeSelector />}
       <p className="notice">
         {mode === 'demo'
-          ? 'نمایش محلی؛ فایل‌ها خوانده یا به سرور ارسال نمی‌شوند.'
+          ? 'ثبت در همین نشست دمو؛ فایل به سرور ارسال نمی‌شود. متن TXT و Markdown تا ۲ مگابایت برای جستجوی محلی خوانده می‌شود.'
           : 'آزمون واقعی؛ نتیجه ساختگی جایگزین خطا نمی‌شود.'}
       </p>
-      {warning && <p role="alert">{warning}</p>}
       <div
         role="region"
         aria-label="انتخاب یا رها کردن اسناد"

@@ -1,13 +1,14 @@
+const apiPrefix=new URLSearchParams(window.location.search).get('embedded')==='1'?'/code-api':'/api';
 export async function api<T=any>(path:string, options?:RequestInit):Promise<T>{
  let r:Response;
- try{r=await fetch('/api'+path,options);}catch{throw Error('ارتباط با backend قطع شد. وضعیت http://127.0.0.1:8000/api/health و لاگ backend را بررسی کنید.');}
+ try{r=await fetch(apiPrefix+path,options);}catch{throw Error('ارتباط با backend قطع شد. سرویس پردازش کد را با scripts/start-demo.ps1 اجرا کنید یا وضعیت /code-api/health و لاگ backend را بررسی کنید.');}
  const text=await r.text();let data:any;
  try{data=JSON.parse(text);}catch{throw Error(`پاسخ نامعتبر از سرور (HTTP ${r.status}). لاگ backend و proxy را بررسی کنید.`);}
  if(!r.ok)throw Error(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail));return data;
 }
 export function uploadArchive(file:File,onProgress:(percent:number)=>void):Promise<any>{
  return new Promise((resolve,reject)=>{
-  const xhr=new XMLHttpRequest();xhr.open('POST','/api/projects/upload?'+new URLSearchParams({filename:file.name}));
+  const xhr=new XMLHttpRequest();xhr.open('POST',apiPrefix+'/projects/upload?'+new URLSearchParams({filename:file.name}));
   xhr.setRequestHeader('Content-Type','application/octet-stream');xhr.timeout=30*60*1000;
   xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(e.loaded/e.total*100));};
   xhr.onerror=()=>reject(Error('اتصال آپلود قطع شد. زنده‌بودن backend، فضای دیسک و لاگ backend را بررسی کنید؛ سپس دوباره تلاش کنید.'));

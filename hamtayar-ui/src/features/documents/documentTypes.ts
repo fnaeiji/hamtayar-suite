@@ -7,7 +7,6 @@ export type DocumentDraft = {
   version: string;
   processingProfile: string;
   customMetadata: MetadataValues;
-  overrides: string[];
 };
 export type DocumentResult = {
   provenance: 'fixture' | 'service';

@@ -1,4 +1,4 @@
-export type ServiceName = 'hamtayar' | 'cgc';
+export type ServiceName = 'hamtayar';
 
 export type ServiceConfig = {
   baseUrl?: string;
@@ -10,10 +10,6 @@ export type ServicesConfig = {
     /** Present only when a positive, operator-verified limit is configured. */
     maxUploadBytes?: number;
     uploadLimitVerified: boolean;
-  };
-  cgc: ServiceConfig & {
-    /** CGC is unauthenticated; only an explicit loopback target is accepted. */
-    localTarget: boolean;
   };
 };
 
@@ -64,21 +60,6 @@ function readBaseUrl(
   }
 }
 
-function isLoopback(url: string | undefined): boolean {
-  if (!url) return false;
-  try {
-    const hostname = new URL(url).hostname.toLowerCase();
-    return (
-      hostname === 'localhost' ||
-      hostname === '::1' ||
-      hostname === '[::1]' ||
-      /^127(?:\.\d{1,3}){3}$/.test(hostname)
-    );
-  } catch {
-    return false;
-  }
-}
-
 export function parseServicesConfig(env: Record<string, string | undefined>): {
   config: ServicesConfig;
   issues: ServiceConfigIssue[];
@@ -90,15 +71,6 @@ export function parseServicesConfig(env: Record<string, string | undefined>): {
     issues,
     'hamtayar',
   );
-  const cgcUrl = readBaseUrl(env.VITE_CGC_BASE_URL, 'VITE_CGC_BASE_URL', issues, 'cgc');
-  if (cgcUrl && !isLoopback(cgcUrl)) {
-    issues.push({
-      service: 'cgc',
-      setting: 'VITE_CGC_BASE_URL',
-      message:
-        'CGC is unauthenticated and must use an explicitly configured loopback target.',
-    });
-  }
   const uploadText = env.VITE_HAMTAYAR_MAX_UPLOAD_BYTES?.trim();
   let maxUploadBytes: number | undefined;
   if (uploadText) {
@@ -135,16 +107,6 @@ export function parseServicesConfig(env: Record<string, string | undefined>): {
       ),
       maxUploadBytes,
       uploadLimitVerified,
-    },
-    cgc: {
-      baseUrl: cgcUrl,
-      timeoutMs: readTimeout(
-        env.VITE_CGC_TIMEOUT_MS,
-        'VITE_CGC_TIMEOUT_MS',
-        issues,
-        'cgc',
-      ),
-      localTarget: isLoopback(cgcUrl),
     },
   };
   return { config, issues };

@@ -16,10 +16,6 @@ export function createWorkspaceStore<T>(initial: () => T) {
   return {
     get: () => state,
     set,
-    observe: (listener: () => void) => {
-      listeners.add(listener);
-      listener();
-    },
     use: () =>
       useSyncExternalStore(
         (fn) => {

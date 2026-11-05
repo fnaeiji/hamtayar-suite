@@ -3,8 +3,7 @@ import { ModeSelector } from '../../components/common/ModeSelector';
 import { MetadataFields } from '../../components/metadata/MetadataFields';
 import { SafeAnswerMarkdown } from '../../components/answers/SafeAnswerMarkdown';
 import { TestDetailsPanel } from '../../components/operations/TestDetailsPanel';
-import { metadataConfigService } from '../../services/metadata/metadataConfigService';
-import { registeredCenters } from '../../services/metadata/registeredCenters';
+import { documentCatalog } from '../../services/documentCatalog';
 import { questionMetadataDefinitions } from '../../config/demoProfile';
 import { createWorkspaceStore } from '../../services/operations/workspaceStore';
 import { runOperation, useOperation } from '../../services/operations/operationService';
@@ -24,23 +23,10 @@ const store = createWorkspaceStore(() => ({
   confirmed: false,
   history: [] as { question: string; result: AnswerResult; mode: string }[],
 }));
-store.observe(() => {
-  for (const group of ['user', 'filters'] as const)
-    metadataConfigService.setDraftValues(
-      `qa-store-${group}`,
-      store.get()[group],
-      (keys) =>
-        store.set({
-          [group]: Object.fromEntries(
-            Object.entries(store.get()[group]).filter(([key]) => !keys.includes(key)),
-          ),
-        }),
-    );
-});
 export function QAPage({ showMode = true }: { showMode?: boolean }) {
   const state = store.use();
   const { mode, canSwitchMode } = useMode();
-  const { centers } = registeredCenters.use();
+  const { centers } = documentCatalog.use();
   const definitions = questionMetadataDefinitions(centers);
   const op = useOperation<AnswerResult>('qa');
   const gate = hamtayarReadiness('qa');

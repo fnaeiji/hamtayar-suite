@@ -40,7 +40,6 @@ export function DocumentFileCard({
                 onChange={(e) =>
                   onChange({
                     [key]: e.target.value,
-                    overrides: [...draft.overrides, key],
                   })
                 }
               />
@@ -54,7 +53,6 @@ export function DocumentFileCard({
           onChange={(key, value) =>
             onChange({
               customMetadata: { ...draft.customMetadata, [key]: value },
-              overrides: [...draft.overrides, key],
             })
           }
         />

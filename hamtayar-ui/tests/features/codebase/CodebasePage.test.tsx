@@ -1,20 +1,34 @@
-import { render, screen, cleanup } from '@testing-library/react';
-import { afterEach, expect, it } from 'vitest';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { afterEach, expect, it, vi } from 'vitest';
 import { CodebasePage } from '../../../src/features/codebase/CodebasePage';
-import { parseCodeWorkspaceUrl } from '../../../src/config/codeWorkspace';
-afterEach(cleanup);
-it('links to the existing local HamtayarDemo rather than running a code fixture', () => {
-  render(<CodebasePage />);
-  expect(screen.getByRole('link', { name: 'باز کردن همتایار کد ↖' })).toHaveAttribute(
-    'href',
-    'http://127.0.0.1:5173/',
-  );
-  expect(
-    screen.queryByRole('button', { name: 'اجرای نمایش کد' }),
-  ).not.toBeInTheDocument();
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
 });
-it('rejects unsafe and nonlocal code UI addresses', () => {
-  expect(parseCodeWorkspaceUrl('javascript:alert(1)')).toBeUndefined();
-  expect(parseCodeWorkspaceUrl('https://example.org')).toBeUndefined();
-  expect(parseCodeWorkspaceUrl('http://localhost:5173')).toBe('http://localhost:5173/');
+it('hosts the original code workspace on the same origin and sends only a page command', () => {
+  render(
+    <MemoryRouter initialEntries={['/codebase/graph']}>
+      <Routes>
+        <Route path="/codebase/:view" element={<CodebasePage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+  const frame = screen.getByTitle('همتایار کد — پردازش کدبیس') as HTMLIFrameElement;
+  expect(frame).toHaveAttribute('src', '/code/index.html?embedded=1');
+  const send = vi.spyOn(frame.contentWindow!, 'postMessage');
+  fireEvent.load(frame);
+  expect(send).toHaveBeenCalledWith(
+    { type: 'hamtayar:code:navigate', page: 'graph' },
+    window.location.origin,
+  );
+  fireEvent(
+    window,
+    new MessageEvent('message', {
+      origin: 'https://example.org',
+      source: frame.contentWindow,
+      data: { type: 'hamtayar:code:page', page: 'settings' },
+    }),
+  );
+  expect(screen.getByText(/کاوش گراف/)).toBeVisible();
 });

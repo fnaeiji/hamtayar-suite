@@ -6,7 +6,6 @@ import { ModeProvider } from '../../src/app/ModeProvider';
 import { AppRoutes } from '../../src/app/router';
 import { operationManager } from '../../src/services/operations/operationManager';
 import { documentsService } from '../../src/features/documents/documentsService';
-import { metadataConfigService } from '../../src/services/metadata/metadataConfigService';
 import type { DocumentResult } from '../../src/features/documents/documentTypes';
 afterEach(() => {
   cleanup();
@@ -34,7 +33,9 @@ it('logs in, retains a pending document across navigation, and clears it on logo
   await user.type(screen.getByLabelText('نام کاربری'), 'demo');
   await user.type(screen.getByLabelText('گذرواژه'), 'Hamtayar123!');
   await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
-  await user.click(screen.getByRole('link', { name: 'ورود اسناد', exact: true }));
+  await user.click(
+    screen.getByRole('link', { name: 'پردازش اسناد سازمانی', exact: true }),
+  );
   await user.upload(
     screen.getByLabelText('انتخاب اسناد'),
     new File(['sample'], 'guide.txt'),
@@ -49,14 +50,15 @@ it('logs in, retains a pending document across navigation, and clears it on logo
   await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
   expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
   await user.click(screen.getByRole('link', { name: 'پرسش‌وپاسخ', exact: true }));
-  expect(metadataConfigService.getDraftValues().center).toBe('alpha');
   finish({
     provenance: 'fixture',
     label: 'نمونه تکمیل شد',
     status: 'completed',
     message: 'sample',
   });
-  await user.click(screen.getByRole('link', { name: 'ورود اسناد', exact: true }));
+  await user.click(
+    screen.getByRole('link', { name: 'پردازش اسناد سازمانی', exact: true }),
+  );
   expect(await screen.findByText('نمونه تکمیل شد')).toBeVisible();
   expect(fetchSpy).not.toHaveBeenCalled();
   await user.click(screen.getByRole('button', { name: 'خروج' }));

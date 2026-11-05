@@ -4,7 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { ModeProvider } from '../../../src/app/ModeProvider';
 import { QAPage } from '../../../src/features/qa/QAPage';
 import { buildQuery } from '../../../src/features/qa/queryModel';
-import { DEFAULT_METADATA_FIELDS } from '../../../src/services/metadata/metadataConfigService';
+import { DEMO_METADATA_FIELDS } from '../../../src/config/demoProfile';
 import { operationManager } from '../../../src/services/operations/operationManager';
 afterEach(() => {
   cleanup();
@@ -13,7 +13,7 @@ afterEach(() => {
 });
 it('converts filters to equality/any-of under AND and retains zero/false', () => {
   const definitions = [
-    ...DEFAULT_METADATA_FIELDS,
+    ...DEMO_METADATA_FIELDS,
     {
       key: 'count',
       labelFa: 'تعداد',

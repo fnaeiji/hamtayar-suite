@@ -1,27 +1,30 @@
 import { Link } from 'react-router-dom';
 import { WorkspaceIcon } from '../../components/common/WorkspaceIcon';
-import { codeWorkspaceUrl } from '../../config/codeWorkspace';
+import { workspaces } from '../../app/workspaces';
+import { documentCatalog } from '../../services/documentCatalog';
 export function OverviewPage() {
+  const catalog = documentCatalog.use();
   return (
     <section className="page-content">
       <div className="hero">
         <div>
-          <p className="eyebrow">ORGANIZATIONAL KNOWLEDGE</p>
+          <p className="eyebrow">فضای یکپارچه دانش سازمان</p>
           <h1>به دموی همتایار خوش آمدید</h1>
           <p>
-            از اسناد تا کد؛ دانش سازمان را یکجا مرور کنید،
+            از سند تا کد، دانشتان را سازمان‌دهی کنید.
             <br />
-            سؤال بپرسید و مسیر رسیدن به پاسخ را ببینید.
+            پردازش، جستجو و پرسش‌وپاسخ در یک فضای کاری.
           </p>
           <Link className="button button--primary" to="/documents">
-            شروع با اسناد <span aria-hidden="true">←</span>
+            شروع پردازش اسناد <span aria-hidden="true">←</span>
           </Link>
         </div>
         <div className="hero-network" aria-hidden="true">
           <svg viewBox="0 0 240 180" fill="none">
-            <g stroke="currentColor" strokeWidth="1">
-              <path d="M120 90 40 40 65 145 120 90 180 35 205 130 120 90 40 40 180 35 M65 145 205 130" />
-            </g>
+            <path
+              d="M120 90 40 40 65 145 120 90 180 35 205 130 120 90 40 40 180 35 M65 145 205 130"
+              stroke="currentColor"
+            />
             {[
               [120, 90, 12],
               [40, 40, 7],
@@ -34,64 +37,52 @@ export function OverviewPage() {
                 cx={cx}
                 cy={cy}
                 r={r}
-                fill="#182e4f"
+                fill="#243f5e"
                 stroke="currentColor"
                 strokeWidth="2"
               />
             ))}
           </svg>
-          <span>CONNECTED KNOWLEDGE</span>
+          <span>DOCUMENTS · KNOWLEDGE · CODE</span>
         </div>
       </div>
       <div className="section-heading">
-        <h2>فضاهای کاری</h2>
-        <span>مسیر موردنظرتان را انتخاب کنید</span>
+        <h2>چهار مسیر برای کار با دانش</h2>
+        <span>فضای موردنظر را انتخاب کنید</span>
       </div>
-      <div className="workspace-grid">
-        <article className="workspace-card">
-          <span className="workspace-icon">
-            <WorkspaceIcon kind="documents" />
-          </span>
-          <h2>همتایار اسناد</h2>
-          <p>اسناد را وارد کنید و مرکز و نوع سند را برای هر فایل مشخص کنید.</p>
-          <Link className="text-link" to="/documents">
-            باز کردن اسناد ←
-          </Link>
-        </article>
-        <article className="workspace-card">
-          <span className="workspace-icon">
-            <WorkspaceIcon kind="qa" />
-          </span>
-          <h2>پرسش‌وپاسخ</h2>
-          <p>با انتخاب مرکز و نوع سند، پرسش خود را آماده کنید و پاسخ نمونه را ببینید.</p>
-          <Link className="text-link" to="/qa">
-            پرسیدن سؤال ←
-          </Link>
-        </article>
-        <article className="workspace-card">
-          <span className="workspace-icon">
-            <WorkspaceIcon kind="code" />
-          </span>
-          <h2>همتایار کد</h2>
-          <p>ورود به HamtayarDemo برای پردازش کدبیس، کاوش گراف و پرسش از کد.</p>
-          <a className="text-link" href={codeWorkspaceUrl ?? '/codebase'}>
-            باز کردن همتایار کد ↖
-          </a>
-        </article>
+      <div className="workspace-grid workspace-grid--four">
+        {workspaces.map((workspace, index) => (
+          <article className="workspace-card" key={workspace.to}>
+            <div className="workspace-card__top">
+              <span className="workspace-icon">
+                <WorkspaceIcon kind={workspace.icon} />
+              </span>
+              <span className="workspace-number">
+                {(index + 1).toLocaleString('fa-IR', { minimumIntegerDigits: 2 })}
+              </span>
+            </div>
+            <h2>{workspace.title}</h2>
+            <p>{workspace.description}</p>
+            <Link className="text-link" to={workspace.to}>
+              {workspace.action} ←
+            </Link>
+          </article>
+        ))}
       </div>
-      <div className="connection-panel">
-        <div className="panel-heading">
-          <h2>آماده برای نمایش</h2>
-          <span className="quiet-badge">DEMO WORKSPACE</span>
+      <section className="session-summary" aria-label="وضعیت نشست نمایشی">
+        <div>
+          <span>اسناد ثبت‌شده در این نشست</span>
+          <strong>{catalog.documents.length.toLocaleString('fa-IR')}</strong>
+        </div>
+        <div>
+          <span>مراکز این نشست</span>
+          <strong>{catalog.centers.length.toLocaleString('fa-IR')}</strong>
         </div>
         <p>
-          نمایش اسناد و پاسخ نمونه مستقل از سرویس‌هاست. همتایار کد در برنامه جداگانه
-          HamtayarDemo اجرا می‌شود.
+          اطلاعات اسناد دمو در حافظه همین نشست است. پردازش کدبیس به سرویس محلی و تنظیمات
+          واقعی آن متصل می‌شود.
         </p>
-        <Link className="text-link" to="/codebase">
-          راهنمای اجرای همتایار کد ←
-        </Link>
-      </div>
+      </section>
     </section>
   );
 }

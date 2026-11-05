@@ -5,6 +5,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { DocumentIngestionPage } from '../features/documents/DocumentIngestionPage';
 import { QAPage } from '../features/qa/QAPage';
 import { CodebasePage } from '../features/codebase/CodebasePage';
+import { PhraseSearchPage } from '../features/search/PhraseSearchPage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { OverviewPage } from '../features/overview/OverviewPage';
 
@@ -20,7 +21,9 @@ export function AppRoutes() {
         }
       >
         <Route index element={<OverviewPage />} />
-        <Route path="codebase" element={<CodebasePage />} />
+        <Route path="codebase" element={<Navigate to="/codebase/dashboard" replace />} />
+        <Route path="codebase/:view" element={<CodebasePage />} />
+        <Route path="search" element={<PhraseSearchPage />} />
         <Route path="documents" element={<DocumentIngestionPage showMode={false} />} />
         <Route path="qa" element={<QAPage showMode={false} />} />
         <Route path="settings/metadata" element={<Navigate to="/" replace />} />

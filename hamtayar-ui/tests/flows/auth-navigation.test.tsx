@@ -125,11 +125,15 @@ describe('demo login and navigation flow', () => {
     await user.type(screen.getByLabelText('نام کاربری'), 'demo');
     await user.type(screen.getByLabelText('گذرواژه'), 'Hamtayar123!');
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
-    expect(await screen.findByRole('heading', { name: 'ورود اسناد' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'پردازش اسناد سازمانی' }),
+    ).toBeVisible();
     firstRender.unmount();
 
     renderApp('/documents');
-    expect(await screen.findByRole('heading', { name: 'ورود اسناد' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'پردازش اسناد سازمانی' }),
+    ).toBeVisible();
   });
 
   it('navigates every workspace and shows the active mode', async () => {
@@ -140,17 +144,18 @@ describe('demo login and navigation flow', () => {
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
 
     expect(screen.getByLabelText('حالت اجرا')).toHaveValue('demo');
-    expect(screen.getByRole('link', { name: 'همتایار کد' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'پردازش کدبیس' })).toHaveAttribute(
       'href',
-      'http://127.0.0.1:5173/',
+      '/codebase/dashboard',
     );
     expect(screen.queryByRole('link', { name: 'تنظیم فراداده' })).not.toBeInTheDocument();
     for (const [linkName, heading] of [
-      ['ورود اسناد', 'ورود اسناد'],
+      ['پردازش اسناد سازمانی', 'پردازش اسناد سازمانی'],
       ['پرسش‌وپاسخ', 'پرسش‌وپاسخ'],
-      ['نمای کلی', 'به دموی همتایار خوش آمدید'],
+      ['جستجو عبارت در اسناد سازمانی', 'جستجو عبارت در اسناد سازمانی'],
+      ['داشبورد', 'به دموی همتایار خوش آمدید'],
     ]) {
-      await user.click(screen.getByRole('link', { name: new RegExp(linkName) }));
+      await user.click(screen.getByRole('link', { name: linkName, exact: true }));
       expect(await screen.findByRole('heading', { name: heading })).toBeVisible();
     }
   });
@@ -187,7 +192,7 @@ describe('demo login and navigation flow', () => {
     expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
 
     await user.click(screen.getByRole('button', { name: 'رفتن به همتایار کد' }));
-    expect(await screen.findByRole('heading', { name: 'همتایار کد' })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: 'پردازش کدبیس' })).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'بازگشت به نمای کلی' }));
     expect(screen.getByText('عملیات: pending')).toBeVisible();
 
