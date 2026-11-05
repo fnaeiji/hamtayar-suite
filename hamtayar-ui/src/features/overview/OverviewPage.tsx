@@ -50,7 +50,7 @@ export function OverviewPage() {
         <h2>چهار مسیر برای کار با دانش</h2>
         <span>فضای موردنظر را انتخاب کنید</span>
       </div>
-      <div className="workspace-grid workspace-grid--four">
+      <div className="workspace-grid">
         {workspaces.map((workspace, index) => (
           <article className="workspace-card" key={workspace.to}>
             <div className="workspace-card__top">

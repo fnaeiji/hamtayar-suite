@@ -47,7 +47,7 @@ it('logs in, retains a pending document across navigation, and clears it on logo
     'alpha',
   );
   await user.selectOptions(screen.getByRole('combobox', { name: /نوع سند/ }), 'normal');
-  await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+  await user.click(screen.getByRole('button', { name: 'پردازش' }));
   expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
   await user.click(screen.getByRole('link', { name: 'پرسش‌وپاسخ', exact: true }));
   finish({

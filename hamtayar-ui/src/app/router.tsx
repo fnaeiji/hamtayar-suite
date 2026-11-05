@@ -24,8 +24,8 @@ export function AppRoutes() {
         <Route path="codebase" element={<Navigate to="/codebase/dashboard" replace />} />
         <Route path="codebase/:view" element={<CodebasePage />} />
         <Route path="search" element={<PhraseSearchPage />} />
-        <Route path="documents" element={<DocumentIngestionPage showMode={false} />} />
-        <Route path="qa" element={<QAPage showMode={false} />} />
+        <Route path="documents" element={<DocumentIngestionPage />} />
+        <Route path="qa" element={<QAPage />} />
         <Route path="settings/metadata" element={<Navigate to="/" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

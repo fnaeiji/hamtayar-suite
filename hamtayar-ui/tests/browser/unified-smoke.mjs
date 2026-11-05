@@ -143,7 +143,7 @@ mkdirSync(screenshots, { recursive: true });
     });
     await page.getByRole('textbox', { name: /^مرکز/ }).fill('مرکز فناوری');
     await page.getByRole('combobox', { name: /نوع سند/ }).selectOption('confidential');
-    await page.getByRole('button', { name: 'اجرای نمایش', exact: true }).click();
+    await page.getByRole('button', { name: 'پردازش', exact: true }).click();
     await page.getByText('نتیجه نمایشی؛ داده در بک‌اند ثبت نمی‌شود').waitFor();
     await page
       .getByRole('link', { name: 'جستجو عبارت در اسناد سازمانی', exact: true })
@@ -151,6 +151,15 @@ mkdirSync(screenshots, { recursive: true });
     await page.getByLabel('عبارت موردنظر').fill('کیمیاتست');
     await page.getByLabel('مرکز', { exact: true }).selectOption('مرکز فناوری');
     await page.getByLabel('نوع سند').selectOption('confidential');
+    await page.getByRole('button', { name: 'پیش‌نمایش درخواست', exact: true }).click();
+    const preview = page.getByRole('region', { name: 'پیش‌نمایش درخواست جستجو' });
+    const request = JSON.parse(await preview.locator('pre').textContent());
+    if (
+      request.phrase !== 'کیمیاتست' ||
+      request.filters.conditions.length !== 2 ||
+      request.filters.conditions[1].value !== 'confidential'
+    )
+      throw Error('Search request preview mismatch');
     await page.getByRole('button', { name: 'جستجوی عبارت' }).click();
     await page.getByRole('heading', { name: 'guide.txt' }).waitFor();
     await page.locator('mark').getByText('کیمیاتست').waitFor();

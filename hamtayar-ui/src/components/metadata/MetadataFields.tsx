@@ -1,50 +1,54 @@
 import { useId } from 'react';
 import type {
   MetadataFieldDefinition,
-  MetadataFieldValue,
+  MetadataKey,
   MetadataValues,
 } from '../../types/metadata';
-import { MetadataFieldControl } from './MetadataFieldControl';
-
-type MetadataFieldsProps = {
+type Props = {
   definitions: MetadataFieldDefinition[];
   values: MetadataValues;
-  onChange: (key: string, value: MetadataFieldValue) => void;
-  group?: 'document' | 'user';
-  queryFilters?: boolean;
+  group: 'document' | 'user';
+  onChange: (key: MetadataKey, value: string) => void;
 };
-
-export function MetadataFields({
-  definitions,
-  values,
-  onChange,
-  group,
-  queryFilters = false,
-}: MetadataFieldsProps) {
-  const ownerId = useId();
-  const visibleFields = definitions.filter(
-    (field) =>
-      field.enabled &&
-      field.visibleInForm &&
-      (!group || field.group === group) &&
-      (!queryFilters || (field.group === 'document' && field.filterable)),
-  );
-
+export function MetadataFields({ definitions, values, group, onChange }: Props) {
+  const owner = useId();
   return (
     <div className="metadata-fields">
-      {visibleFields.map((field) => (
-        <MetadataFieldControl
-          field={field}
-          idPrefix={`metadata-${ownerId}`}
-          key={field.key}
-          onChange={onChange}
-          queryFilter={queryFilters}
-          value={values[field.key]}
-        />
-      ))}
-      {visibleFields.length === 0 && (
-        <p className="metadata-fields__empty">فیلدی برای نمایش وجود ندارد.</p>
-      )}
+      {definitions
+        .filter((field) => field.group === group)
+        .map((field) => {
+          const id = `metadata-${owner}-${field.key}`;
+          return (
+            <div className="metadata-field" key={field.key}>
+              <label htmlFor={id}>
+                {field.labelFa}
+                {field.required && <span aria-hidden="true"> *</span>}
+              </label>
+              {field.type === 'select' ? (
+                <select
+                  id={id}
+                  required={field.required}
+                  value={values[field.key] ?? ''}
+                  onChange={(e) => onChange(field.key, e.target.value)}
+                >
+                  <option value="">انتخاب کنید</option>
+                  {field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.labelFa}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  id={id}
+                  required={field.required}
+                  value={values[field.key] ?? ''}
+                  onChange={(e) => onChange(field.key, e.target.value)}
+                />
+              )}
+            </div>
+          );
+        })}
     </div>
   );
 }

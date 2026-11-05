@@ -1,3 +1,4 @@
+import { ModeSelector } from '../../../src/components/common/ModeSelector';
 import {
   cleanup,
   fireEvent,
@@ -21,6 +22,7 @@ function file(name = 'handbook.pdf', size = 12, type = 'application/pdf') {
 function renderPage() {
   return render(
     <ModeProvider>
+      <ModeSelector />
       <MemoryRouter>
         <DocumentIngestionPage />
       </MemoryRouter>
@@ -135,7 +137,7 @@ describe('document ingestion Demo flow', () => {
         'normal',
       );
     }
-    await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+    await user.click(screen.getByRole('button', { name: 'پردازش' }));
 
     expect(await screen.findByText(/نتیجه نمایشی/)).toBeVisible();
     expect(screen.getByText(/نمونه این فایل با خطا روبه‌رو شد/)).toBeVisible();
@@ -156,7 +158,7 @@ describe('document ingestion Demo flow', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       /سقف بارگذاری سرویس تأیید نشده است/,
     );
-    expect(screen.getByRole('button', { name: 'ارسال به سرویس' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'پردازش' })).toBeDisabled();
   });
 
   it('makes no operational request in Demo mode', async () => {
@@ -172,7 +174,7 @@ describe('document ingestion Demo flow', () => {
         'normal',
       );
     }
-    await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+    await user.click(screen.getByRole('button', { name: 'پردازش' }));
 
     await waitFor(() => expect(screen.getByText(/نتیجه نمایشی/)).toBeVisible());
     expect(fetchSpy).not.toHaveBeenCalled();

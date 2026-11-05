@@ -1,5 +1,4 @@
 import { useMode } from '../../app/ModeProvider';
-import { ModeSelector } from '../../components/common/ModeSelector';
 import {
   documentCatalog,
   prepareLocalDocument,
@@ -29,7 +28,7 @@ const store = createWorkspaceStore(() => ({
   preview: false,
   reduced: false,
 }));
-export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean }) {
+export function DocumentIngestionPage() {
   const state = store.use();
   const { mode, canSwitchMode } = useMode();
   const definitions = DEMO_METADATA_FIELDS;
@@ -103,7 +102,6 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
     <section className="page-content">
       <p className="eyebrow">فضای اسناد</p>
       <h1>پردازش اسناد سازمانی</h1>
-      {showMode && <ModeSelector />}
       <p className="notice">
         {mode === 'demo'
           ? 'ثبت در همین نشست دمو؛ فایل به سرور ارسال نمی‌شود. متن TXT و Markdown تا ۲ مگابایت برای جستجوی محلی خوانده می‌شود.'
@@ -173,7 +171,7 @@ export function DocumentIngestionPage({ showMode = true }: { showMode?: boolean 
           }
           onClick={() => void submit()}
         >
-          {mode === 'demo' ? 'اجرای نمایش' : 'ارسال به سرویس'}
+          پردازش
         </button>
         <button
           type="button"

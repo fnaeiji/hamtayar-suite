@@ -15,9 +15,6 @@ export const DEMO_METADATA_FIELDS: MetadataFieldDefinition[] = [
     group: 'document',
     type: 'text',
     required: true,
-    enabled: true,
-    visibleInForm: true,
-    filterable: true,
   },
   {
     key: 'document_type',
@@ -26,9 +23,6 @@ export const DEMO_METADATA_FIELDS: MetadataFieldDefinition[] = [
     type: 'select',
     options: CLASSIFICATION_OPTIONS,
     required: true,
-    enabled: true,
-    visibleInForm: true,
-    filterable: true,
   },
   {
     key: 'person_access_level',
@@ -37,8 +31,6 @@ export const DEMO_METADATA_FIELDS: MetadataFieldDefinition[] = [
     type: 'select',
     options: CLASSIFICATION_OPTIONS,
     required: false,
-    enabled: true,
-    visibleInForm: true,
   },
 ];
 

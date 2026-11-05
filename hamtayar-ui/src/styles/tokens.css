@@ -2,23 +2,15 @@
   font-family: 'Vazirmatn', Tahoma, system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  font-size: 15px;
+  font-size: 16px;
   color-scheme: light;
   color: #23334a;
-  background: #f3f6fa;
+  background: #edf2f8;
   --color-brand: #285a8b;
-  --color-brand-strong: #1c4269;
-  --color-surface: #ffffff;
-  --color-surface-muted: #eaf0f7;
-  --color-border: #dce4ee;
+  --color-canvas: #edf2f8;
+  --color-border: #b8c9dc;
   --color-text: #23334a;
-  --color-text-muted: #617187;
-  --color-success: #216b53;
-  --color-warning: #8c6319;
   --color-danger: #ac3651;
-  --color-info: #285a8b;
   --focus-ring: 0 0 0 3px #3a75ad38;
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --shadow-card: 0 4px 22px #20375306;
+  --shadow-card: 0 4px 22px #20375310;
 }

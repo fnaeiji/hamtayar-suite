@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { OperationRecord } from '../../types/operations';
 /** Diagnostics are structured client data; never pass raw headers or service error bodies. */
-export function sanitizeDetails(value: unknown): unknown {
+function sanitizeDetails(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sanitizeDetails);
   if (value && typeof value === 'object')
     return Object.fromEntries(

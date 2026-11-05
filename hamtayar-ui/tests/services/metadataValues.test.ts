@@ -28,6 +28,8 @@ it('requires current document fields, rejects invalid classifications and omits 
     ),
   ).toEqual({ center: 'الف', document_type: 'normal' });
   expect(
-    validateMetadataValues(DEMO_METADATA_FIELDS, {}, 'document', { queryFilters: true }),
+    validateMetadataValues(DEMO_METADATA_FIELDS, {}, 'document', {
+      requireFields: false,
+    }),
   ).toHaveLength(0);
 });

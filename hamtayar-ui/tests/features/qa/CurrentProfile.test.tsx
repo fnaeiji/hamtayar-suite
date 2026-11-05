@@ -78,7 +78,7 @@ it('adds only successful document centers, deduplicates them, and keeps them aft
     );
   }
   expect(documentCatalog.get().centers).toEqual([]);
-  await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+  await user.click(screen.getByRole('button', { name: 'پردازش' }));
   await screen.findByText('نمونه این فایل با خطا روبه‌رو شد.');
   await waitFor(() => expect(documentCatalog.get().centers).toEqual(['مرکز الف']));
   await user.click(screen.getByRole('button', { name: 'پاک کردن' }));

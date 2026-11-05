@@ -10,28 +10,29 @@
 .graph-filters{display:grid;grid-template-columns:2fr 2fr 1fr .7fr .8fr;gap:12px;margin:18px 0}.graph-filters label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#94a3b8}.graph-filters select{width:100%;min-width:0}.graph-filter-actions{padding:12px 0;border-top:1px solid #263349}.graph-help{margin:12px 0;color:#94a3b8}.report-table{width:100%;border-collapse:collapse;margin-top:20px;direction:ltr;text-align:left}.report-table th,.report-table td{padding:12px;border-bottom:1px solid #263349}.alert dl{display:grid;grid-template-columns:110px 1fr;gap:8px;overflow-wrap:anywhere}.alert dd{margin:0}@media(max-width:1000px){.graph-filters{grid-template-columns:1fr 1fr}}
 
 /* The integrated workspace inherits the main dashboard's formal light surfaces. */
-body.embedded-code{background:#f3f6fa;color:#23334a;min-height:100vh}
+body.embedded-code{font-size:16px;background:#edf2f8;color:#23334a;min-height:100vh}
 .shell--embedded{display:block;min-height:100vh}
-.shell--embedded main{padding:20px;max-width:none;margin:0;background:#f3f6fa}
+.shell--embedded main{padding:20px;max-width:none;margin:0;background:#edf2f8}
 .shell--embedded header{margin-bottom:22px;align-items:flex-start}
 .shell--embedded h1{font-size:22px;color:#233e5e}
 .shell--embedded h2,.shell--embedded h3,.shell--embedded h4{color:#2b425e}
 .shell--embedded p{color:#617187}
-.shell--embedded .panel,.shell--embedded .metrics article,.shell--embedded .capabilities article,.shell--embedded .result{background:white;border-color:#dce4ee;color:#23334a}
+.shell--embedded .panel,.shell--embedded .metrics article,.shell--embedded .capabilities article,.shell--embedded .result{background:white;border-color:#b8c9dc;color:#23334a}
 .shell--embedded button{background:#eaf0f7;border-color:#cedbe9;color:#315678}
 .shell--embedded button:hover{background:#dce8f4}
 .shell--embedded button.primary,.shell--embedded .primary{background:#285a8b;border-color:#285a8b;color:white}
-.shell--embedded input,.shell--embedded select,.shell--embedded textarea{background:#fcfdff;border-color:#cfdae7;color:#263e5c}
+.shell--embedded input,.shell--embedded select,.shell--embedded textarea{background:#fcfdff;border-color:#adc0d4;color:#263e5c}
 .shell--embedded .hero{background:linear-gradient(115deg,#e7eff8,#f8fbfe);border-color:#cfdfee;padding:28px}
 .shell--embedded .hero h2{font-size:26px}
 .shell--embedded .dropzone{background:#f8fbfe;border-color:#9fb5cc}
-.shell--embedded .badge{color:#456887;border-color:#cfdae7;background:#f0f5fa}
-.shell--embedded pre,.shell--embedded .answer{background:#edf2f7;border-color:#dce4ed;color:#385471}
-.shell--embedded .file-tree button,.shell--embedded .muted,.shell--embedded .project-row small{color:#607a95}
-.shell--embedded .project-row{border-color:#dce4ee}
-.shell--embedded .report-table td,.shell--embedded .report-table th{border-color:#dce4ee}
+.shell--embedded .badge{color:#456887;border-color:#adc0d4;background:#f0f5fa}
+.shell--embedded pre,.shell--embedded .answer{font-size:14px;background:#edf2f7;border-color:#b8c9dc;color:#385471}
+.shell--embedded .file-tree button,.shell--embedded .muted,.shell--embedded .project-row small{color:#607a95;font-size:14px}
+.shell--embedded .project-row{border-color:#b8c9dc}
+.shell--embedded .report-table td,.shell--embedded .report-table th{border-color:#b8c9dc}
 .shell--embedded .alert{background:#fff4d9;border-color:#e0c585;color:#70511c}
 .shell--embedded .error{background:#fff0f3;border-color:#e5bac5;color:#9b2e4a}
 .shell--embedded .success{background:#eaf8f1;border-color:#b5dcc7;color:#216b53}
+.shell--embedded .settings-grid label,.shell--embedded .graph-filters label{font-size:14px}
 .shell--embedded footer{display:none}
 @media(max-width:700px){.shell--embedded main{padding:14px}.shell--embedded header{display:grid;gap:14px}.shell--embedded .header-actions{max-width:100%}.shell--embedded .header-actions select{max-width:100%}.shell--embedded .hero{padding:22px}.shell--embedded .hero h2{font-size:23px}}

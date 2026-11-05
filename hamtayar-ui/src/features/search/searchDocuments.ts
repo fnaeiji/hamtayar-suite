@@ -1,3 +1,4 @@
+import type { PhraseSearchRequest } from './searchRequest';
 import type { LocalDocument } from '../../services/documentCatalog';
 export type PhraseResult = {
   document: LocalDocument;
@@ -7,18 +8,19 @@ export type PhraseResult = {
 };
 export function searchDocuments(
   documents: LocalDocument[],
-  phrase: string,
-  center: string,
-  classification: string,
+  request: PhraseSearchRequest,
 ): PhraseResult[] {
-  const needle = phrase.trim();
+  const needle = request.phrase;
   if (!needle) return [];
   const expression = new RegExp(needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'iu');
   return documents.flatMap((document) => {
     if (
       document.text === undefined ||
-      (center && document.center !== center) ||
-      (classification && document.classification !== classification)
+      !request.filters.conditions.every(
+        (condition) =>
+          (condition.key === 'center' ? document.center : document.classification) ===
+          condition.value,
+      )
     )
       return [];
     const match = expression.exec(document.text);

@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { WorkspaceIcon } from '../../components/common/WorkspaceIcon';
-import { StatusMessage } from '../../components/common/StatusMessage';
 import { hasDemoSession, signIn } from './authService';
 
 export function LoginPage() {
@@ -43,7 +42,11 @@ export function LoginPage() {
           این ورود فقط برای نمایش رابط کاربری است و به سرویس‌های پشتیبان احراز هویت
           نمی‌کند.
         </p>
-        {error && <StatusMessage tone="error">{error}</StatusMessage>}
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
         <form className="login-form" onSubmit={handleSubmit}>
           <label>
             نام کاربری

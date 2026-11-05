@@ -2,6 +2,7 @@ import { useMode } from '../../app/ModeProvider';
 import { CLASSIFICATION_OPTIONS } from '../../config/demoProfile';
 import { documentCatalog } from '../../services/documentCatalog';
 import { createWorkspaceStore } from '../../services/operations/workspaceStore';
+import { buildPhraseSearchRequest, type PhraseSearchRequest } from './searchRequest';
 import { searchDocuments, type PhraseResult } from './searchDocuments';
 const store = createWorkspaceStore(() => ({
   phrase: '',
@@ -10,29 +11,41 @@ const store = createWorkspaceStore(() => ({
   error: '',
   results: [] as PhraseResult[],
   searched: false,
+  preview: false,
 }));
 export function PhraseSearchPage() {
   const { mode } = useMode();
   const catalog = documentCatalog.use();
   const state = store.use();
   const unsupported = catalog.documents.filter((d) => d.text === undefined);
+  let request: PhraseSearchRequest | undefined;
+  let validationError = '';
+  try {
+    request = buildPhraseSearchRequest(
+      state.phrase,
+      state.center,
+      state.classification,
+      catalog.centers,
+    );
+  } catch (error) {
+    validationError = (error as Error).message;
+  }
+  function preview() {
+    store.set({ preview: true, error: validationError });
+  }
   function search() {
     if (mode === 'api') return;
-    if (!state.phrase.trim()) {
-      store.set({ error: 'عبارت موردنظر را وارد کنید.' });
+    if (!request) {
+      store.set({ error: validationError });
       return;
     }
     store.set({
       error: '',
       searched: true,
-      results: searchDocuments(
-        catalog.documents,
-        state.phrase,
-        state.center,
-        state.classification,
-      ),
+      results: searchDocuments(catalog.documents, request),
     });
   }
+
   return (
     <section className="page-content">
       <p className="eyebrow">جستجو در متن اسناد</p>
@@ -95,14 +108,42 @@ export function PhraseSearchPage() {
             انتخاب کنید.
           </p>
         )}
-        <button
-          className="button button--primary"
-          type="submit"
-          disabled={mode === 'api'}
-        >
-          جستجوی عبارت
-        </button>
+        <div className="actions">
+          <button
+            className="button button--primary"
+            type="submit"
+            disabled={mode === 'api'}
+          >
+            جستجوی عبارت
+          </button>
+          <button className="button button--quiet" type="button" onClick={preview}>
+            پیش‌نمایش درخواست
+          </button>
+        </div>
       </form>
+      {state.preview && request && (
+        <section
+          className="request-preview workspace-card"
+          role="region"
+          aria-label="پیش‌نمایش درخواست جستجو"
+        >
+          <div className="section-heading">
+            <h2>پیش‌نمایش درخواست جستجو</h2>
+            <button
+              type="button"
+              className="button button--quiet"
+              onClick={() => store.set({ preview: false })}
+            >
+              بستن پیش‌نمایش
+            </button>
+          </div>
+          <p>
+            این JSON الگوی پیشنهادی درخواست و ورودی جستجوی محلی است؛ هنوز endpoint جستجوی
+            سرویس متصل نشده و در دمو درخواست شبکه‌ای ارسال نمی‌شود.
+          </p>
+          <pre dir="ltr">{JSON.stringify(request, null, 2)}</pre>
+        </section>
+      )}
       {catalog.documents.length === 0 && (
         <div className="empty-state">
           <h2>هنوز سندی برای جستجو ندارید</h2>

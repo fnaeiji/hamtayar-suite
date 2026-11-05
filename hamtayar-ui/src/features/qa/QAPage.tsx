@@ -1,5 +1,4 @@
 import { useMode } from '../../app/ModeProvider';
-import { ModeSelector } from '../../components/common/ModeSelector';
 import { MetadataFields } from '../../components/metadata/MetadataFields';
 import { SafeAnswerMarkdown } from '../../components/answers/SafeAnswerMarkdown';
 import { TestDetailsPanel } from '../../components/operations/TestDetailsPanel';
@@ -23,7 +22,7 @@ const store = createWorkspaceStore(() => ({
   confirmed: false,
   history: [] as { question: string; result: AnswerResult; mode: string }[],
 }));
-export function QAPage({ showMode = true }: { showMode?: boolean }) {
+export function QAPage() {
   const state = store.use();
   const { mode, canSwitchMode } = useMode();
   const { centers } = documentCatalog.use();
@@ -77,7 +76,6 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
     <section className="page-content">
       <p className="eyebrow">جست‌وجو در دانش</p>
       <h1>پرسش‌وپاسخ</h1>
-      {showMode && <ModeSelector />}
       <p className="notice">
         {mode === 'demo'
           ? 'پاسخ و منابع ثابت و نمایشی هستند؛ فیلترها و اطلاعات کاربر روی نتیجه نمونه اعمال نمی‌شوند.'
@@ -113,7 +111,6 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
           <MetadataFields
             definitions={definitions.filter((f) => f.key === 'center')}
             group="document"
-            queryFilters
             values={state.filters}
             onChange={(key, value) =>
               store.set({ filters: { [key]: value }, preview: undefined })
@@ -152,7 +149,7 @@ export function QAPage({ showMode = true }: { showMode?: boolean }) {
               !canSwitchMode || (mode === 'api' && (!gate.ready || !state.confirmed))
             }
           >
-            {mode === 'demo' ? 'نمایش پاسخ نمونه' : 'آزمون فقط سؤال'}
+            پاسخ
           </button>
           <button className="button button--quiet" type="button" onClick={preview}>
             پیش‌نمایش پرسش

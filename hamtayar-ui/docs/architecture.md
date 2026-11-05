@@ -23,8 +23,10 @@ The embedded API client sends to `/code-api`, which Vite rewrites to the existin
 
 Successful Demo document operations add records to the shared in-memory catalog. TXT/Markdown up to 2 MiB are decoded as UTF-8; other files retain a clear search-unavailable reason. Reads obey operation/session aborts. Source ID replaces a deliberate retry rather than duplicating the record. Centers are normalized and derived from successful catalog records.
 
-Phrase search is literal, case-insensitive and applies center plus classification equality together. Snippets are rendered as React text with a `mark` element, not raw HTML. No SQL/Cypher or operational request is generated. No preview, answer or text content is persisted to localStorage.
+Phrase search is literal, case-insensitive and applies center plus classification equality together. Snippets are rendered as React text with a `mark` element, not raw HTML. The preview and local executor share a validated `PhraseSearchRequest` built in `src/features/search/searchRequest.ts`. Its JSON contains the trimmed phrase, explicit literal/case-insensitive match settings, and AND/equality document filters; empty filters are omitted. It is a proposed future service request shape, not a verified backend contract. No SQL/Cypher or network request is generated. No preview, answer or text content is persisted to localStorage.
 
 ## Cleanup
 
 Removed the previous metadata settings page and its persistence/editor service/tests; unreachable placeholder; old codebase fixture/service; unused loading/connection/LTR components; separate-code-URL config; obsolete CGC readiness adapter/tests; redundant draft metadata observers, shared override state and editor CSS. Current value validation is a small pure module. Active Spec Kit tooling and source requirements remain as project governance, not runtime code.
+
+The metadata model now accepts only center, document classification and descriptive user access level. Former generic number/boolean/multi-select controls and editor flags are removed. Execution mode belongs to the dashboard header.

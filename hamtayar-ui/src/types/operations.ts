@@ -1,9 +1,9 @@
 export type OperationMode = 'demo' | 'api';
 
 export type OperationStatus =
-  'idle' | 'validating' | 'pending' | 'completed' | 'failed' | 'uncertain';
+  'validating' | 'pending' | 'completed' | 'failed' | 'uncertain';
 
-export type ResultProvenance = 'fixture' | 'service' | 'none';
+type ResultProvenance = 'fixture' | 'service' | 'none';
 
 export type DiagnosticErrorKind =
   'timeout' | 'network' | 'http' | 'invalid_response' | 'aborted' | 'blocked';

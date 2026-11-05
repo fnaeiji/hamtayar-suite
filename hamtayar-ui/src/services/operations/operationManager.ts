@@ -104,7 +104,6 @@ class OperationManager {
   private canTransition(from: OperationStatus, to: OperationStatus): boolean {
     if (from === to) return true;
     const allowed: Record<OperationStatus, OperationStatus[]> = {
-      idle: ['validating'],
       validating: ['pending', 'failed'],
       pending: ['completed', 'failed', 'uncertain'],
       completed: ['validating'],

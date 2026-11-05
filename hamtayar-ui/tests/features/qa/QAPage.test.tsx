@@ -1,77 +1,55 @@
+import { ModeSelector } from '../../../src/components/common/ModeSelector';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
 import { ModeProvider } from '../../../src/app/ModeProvider';
 import { QAPage } from '../../../src/features/qa/QAPage';
 import { buildQuery } from '../../../src/features/qa/queryModel';
-import { DEMO_METADATA_FIELDS } from '../../../src/config/demoProfile';
+import { questionMetadataDefinitions } from '../../../src/config/demoProfile';
 import { operationManager } from '../../../src/services/operations/operationManager';
 afterEach(() => {
   cleanup();
   operationManager.logout();
   vi.restoreAllMocks();
 });
-it('converts filters to equality/any-of under AND and retains zero/false', () => {
-  const definitions = [
-    ...DEMO_METADATA_FIELDS,
-    {
-      key: 'count',
-      labelFa: 'تعداد',
-      group: 'document' as const,
-      type: 'number' as const,
-      filterable: true,
-      enabled: true,
-      visibleInForm: true,
-      required: true,
-    },
-    {
-      key: 'active',
-      labelFa: 'فعال',
-      group: 'document' as const,
-      type: 'boolean' as const,
-      filterable: true,
-      enabled: true,
-      visibleInForm: true,
-      required: true,
-    },
-  ];
+it('builds current metadata with AND equality and omits empty and obsolete fields', () => {
   const query = buildQuery(
     ' test ',
-    {},
-    {
-      department: 'engineering',
-      tags: ['internal', 'research'],
-      count: 0,
-      active: false,
-      project: '',
+    { person_access_level: 'confidential' },
+    { center: 'الف', document_type: 'normal', department: 'obsolete' },
+    questionMetadataDefinitions(['الف']),
+  );
+  expect(query).toEqual({
+    question: 'test',
+    user_metadata: { person_access_level: 'confidential' },
+    filters: {
+      operator: 'and',
+      conditions: [
+        { key: 'center', operator: 'eq', value: 'الف' },
+        { key: 'document_type', operator: 'eq', value: 'normal' },
+      ],
     },
-    definitions,
-  );
-  expect(query.question).toBe('test');
-  expect(query.filters.operator).toBe('and');
-  expect(query.filters.conditions).toEqual(
-    expect.arrayContaining([
-      { key: 'count', operator: 'eq', value: 0 },
-      { key: 'active', operator: 'eq', value: false },
-    ]),
-  );
-  expect(query.filters.conditions.some((c) => c.key === 'project')).toBe(false);
+  });
+  expect(
+    buildQuery('test', {}, {}, questionMetadataDefinitions([])).filters.conditions,
+  ).toEqual([]);
 });
 it('shows sample sources without requests and discloses question-only API boundary', async () => {
   const fetchSpy = vi.spyOn(window, 'fetch');
   const user = userEvent.setup();
   render(
     <ModeProvider>
+      <ModeSelector />
       <QAPage />
     </ModeProvider>,
   );
   await user.type(screen.getByLabelText('پرسش شما'), 'همتایار چیست؟');
-  await user.click(screen.getByRole('button', { name: 'نمایش پاسخ نمونه' }));
+  await user.click(screen.getByRole('button', { name: 'پاسخ' }));
   expect(await screen.findByText('راهنمای نمونه همتایار')).toBeVisible();
   expect(fetchSpy).not.toHaveBeenCalled();
   await user.selectOptions(screen.getByRole('combobox', { name: 'حالت اجرا' }), 'api');
   expect(screen.getByText(/فقط سؤال ارسال می‌شود/)).toBeVisible();
-  expect(screen.getByRole('button', { name: 'آزمون فقط سؤال' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'پاسخ' })).toBeDisabled();
 });
 it('retains question input when fixture processing fails', async () => {
   const { qaService } = await import('../../../src/features/qa/qaService');
@@ -79,11 +57,12 @@ it('retains question input when fixture processing fails', async () => {
   const user = userEvent.setup();
   render(
     <ModeProvider>
+      <ModeSelector />
       <QAPage />
     </ModeProvider>,
   );
   await user.type(screen.getByLabelText('پرسش شما'), 'keep this question');
-  await user.click(screen.getByRole('button', { name: 'نمایش پاسخ نمونه' }));
+  await user.click(screen.getByRole('button', { name: 'پاسخ' }));
   expect(await screen.findByRole('alert')).not.toHaveTextContent('private stack');
   expect(screen.getByLabelText('پرسش شما')).toHaveValue('keep this question');
 });
