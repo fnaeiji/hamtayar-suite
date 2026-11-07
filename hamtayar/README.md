@@ -1,5 +1,7 @@
 # hamtayar
 
+راهنمای اجرای گراف‌های ingestion و retrieval، trace، checkpoint و دیباگ: [PIPELINES_FA.md](docs/PIPELINES_FA.md).
+
 
 
 ## Getting started

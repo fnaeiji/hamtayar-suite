@@ -45,6 +45,7 @@ class ChunkingRequest(ContractModel):
     items: list[ChunkingItem]
     access: AccessMetadata
     processing_profile: str = "default"
+    metadata: dict[str, str] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def validate_unique_document_block_ids(self):

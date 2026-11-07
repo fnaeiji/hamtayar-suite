@@ -6,13 +6,12 @@ This module deliberately does not require an external telemetry service or SDK.
 import json
 import logging
 from contextvars import ContextVar
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from time import perf_counter
 from typing import Protocol
 from uuid import UUID, uuid4
 
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
-
 
 _request_id: ContextVar[str | None] = ContextVar("hamtayar_request_id", default=None)
 
@@ -26,7 +25,7 @@ class JsonFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, object] = {
-            "timestamp": datetime.fromtimestamp(record.created, tz=timezone.utc).isoformat(),
+            "timestamp": datetime.fromtimestamp(record.created, tz=UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "event": record.getMessage(),
@@ -134,6 +133,77 @@ class RequestContextMiddleware:
     def _run_hook(self, fn, **kwargs) -> None:
         try:
             fn(**kwargs)
-        except Exception:
+        except Exception:  # noqa: BLE001 - telemetry must not affect requests
             # Instrumentation must not alter the application response.
             self.logger.warning("telemetry_hook_failed")
+
+
+class PipelineTrace:
+    """Local, content-free JSONL events plus a self-contained HTML timeline."""
+
+    def __init__(self, path, *, run_id: str, workflow: str, echo=False):
+        from pathlib import Path
+        self.path = Path(path)
+        self.error = None
+        self.run_id, self.workflow, self.echo = run_id, workflow, echo
+        try:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            self._unavailable()
+
+    def record(self, event: str, **fields):
+        from datetime import datetime
+        allowed = {'node', 'task_id', 'checkpoint_id', 'step', 'next', 'status',
+                   'duration_ms', 'error_code', 'retryable', 'chunk_count', 'indexed_count',
+                   'result_count', 'evidence_count', 'published'}
+        entry = {'time': datetime.now(UTC).isoformat(), 'run_id': self.run_id,
+                 'workflow': self.workflow, 'event': event,
+                 **{key: value for key, value in fields.items() if key in allowed}}
+        line = json.dumps(entry, ensure_ascii=False)
+        if self.error is not None:
+            return
+        try:
+            with self.path.open('a', encoding='utf-8') as stream:
+                stream.write(line + '\n')
+            if self.echo:
+                print(line, flush=True)
+        except OSError:
+            self._unavailable()
+
+    def _unavailable(self):
+        if self.error is None:
+            logging.getLogger("hamtayar.pipeline_trace").warning("local_trace_unavailable")
+        self.error = "local_trace_unavailable"
+
+    def render(self):
+        try:
+            return self._render()
+        except (OSError, ValueError):
+            self._unavailable()
+            return None
+
+    def _render(self):
+        from html import escape
+        entries = [json.loads(line) for line in self.path.read_text(encoding='utf-8').splitlines() if line.strip()]
+        rows = []
+        for item in entries:
+            details = {k: v for k, v in item.items() if k not in ('time', 'run_id', 'workflow', 'event', 'node')}
+            cells = [item['time'], item['event'], item.get('node', ''), json.dumps(details, ensure_ascii=False)]
+            rows.append('<tr>' + ''.join('<td>' + escape(str(cell)) + '</td>' for cell in cells) + '</tr>')
+        page = '<!doctype html><meta charset="utf-8"><title>Hamtayar pipeline trace</title>'
+        page += '<style>body{font:15px system-ui;margin:32px;background:#f5f7fb;color:#172235}table{border-collapse:collapse;width:100%;background:white}td,th{padding:12px;border-bottom:1px solid #ddd;text-align:left}td:last-child{font:13px monospace}tr:hover{background:#eef4ff}</style>'
+        page += '<h1>Hamtayar · ' + escape(self.workflow) + '</h1><p>Run: ' + escape(self.run_id) + '</p>'
+        page += '<p>Search this timeline with Ctrl+F. Document text, questions, vectors and credentials are excluded.</p>'
+        page += '<table><tr><th>UTC time</th><th>Event</th><th>Node</th><th>Details</th></tr>' + ''.join(rows) + '</table>'
+        output = self.path.with_suffix('.html')
+        output.write_text(page, encoding='utf-8')
+        return output
+
+
+def state_summary(values):
+    """Allowlist operational metadata; never serialize document/query payloads."""
+    summary = {key: values[key] for key in ('status', 'chunk_count', 'indexed_count', 'published') if key in values}
+    for key, label in (('results', 'result_count'), ('evidence', 'evidence_count')):
+        if isinstance(values.get(key), list):
+            summary[label] = len(values[key])
+    return summary

@@ -18,6 +18,7 @@ ALLOWED = {
     "knowledge": {"contracts", "storage"},
     "retrieval": {"contracts", "storage", "access", "knowledge"},
     "answering": {"contracts"},
+    "ingestion": {"contracts", "documents", "knowledge"},
 }
 
 
