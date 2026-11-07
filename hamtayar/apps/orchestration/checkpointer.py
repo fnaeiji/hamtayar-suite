@@ -5,13 +5,12 @@ Never use the in-memory backend as durable production storage.
 """
 
 from collections.abc import AsyncIterator, Callable
-from contextlib import asynccontextmanager
+from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, AsyncContextManager, Literal
+from typing import Any, Literal
 
-
-CheckpointProvider = Callable[[], AsyncContextManager[Any]]
+CheckpointProvider = Callable[[], AbstractAsyncContextManager[Any]]
 
 
 @dataclass(frozen=True)
@@ -72,10 +71,17 @@ class CheckpointerFactory:
 
 def checkpoint_resource_factory(
     factory: CheckpointerFactory,
-) -> Callable[[Any], AsyncContextManager[Any]]:
+) -> Callable[[Any], AbstractAsyncContextManager[Any]]:
     """Adapter for BootstrapRegistry.resources['checkpointer']."""
 
-    def resource(_settings: Any) -> AsyncContextManager[Any]:
+    def resource(_settings: Any) -> AbstractAsyncContextManager[Any]:
         return factory.open()
 
     return resource
+
+
+def record_pipeline_checkpoint(trace, checkpoint):
+    """Single checkpoint transition observer; no raw checkpoint data in logs."""
+    config = checkpoint.get('config', {}).get('configurable', {})
+    trace.record('checkpoint', checkpoint_id=config.get('checkpoint_id'),
+                 step=checkpoint.get('metadata', {}).get('step'), next=list(checkpoint.get('next', [])))

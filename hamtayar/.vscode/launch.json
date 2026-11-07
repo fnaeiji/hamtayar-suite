@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Hamtayar: ingest document",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "apps.pipelines.cli",
+      "cwd": "${workspaceFolder}",
+      "args": ["--local-access", "ingest", "${input:documentPath}", "--source-id", "debug-document", "--space", "demo"],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {"LANGSMITH_TRACING": "false"}
+    },
+    {
+      "name": "Hamtayar: retrieve evidence",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "apps.pipelines.cli",
+      "cwd": "${workspaceFolder}",
+      "args": ["--local-access", "query", "${input:question}", "--mode", "semantic"],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {"LANGSMITH_TRACING": "false"}
+    }
+  ],
+  "inputs": [
+    {"id": "documentPath", "type": "promptString", "description": "TXT/Markdown file path inside the hamtayar folder"},
+    {"id": "question", "type": "promptString", "description": "Question to retrieve evidence for"}
+  ]
+}

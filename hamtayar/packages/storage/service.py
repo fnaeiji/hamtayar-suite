@@ -20,6 +20,7 @@ from packages.contracts.storage import (
     StoreFailure,
     StoreResult,
 )
+from packages.storage.artifacts.repository import LocalArtifactRepository
 from packages.storage.exceptions import (
     ChunkValidationError,
     CollectionMismatchError,
@@ -46,6 +47,7 @@ __all__ = [
     "ChunkValidationError",
     "CollectionMismatchError",
     "Distance",
+    "LocalArtifactRepository",
     "ReadBackMismatchError",
     "SearchFilter",
     "SearchHit",
