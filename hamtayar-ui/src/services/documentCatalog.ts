@@ -32,7 +32,7 @@ export async function prepareLocalDocument(
   signal: AbortSignal,
 ): Promise<LocalDocument> {
   const document: LocalDocument = {
-    sourceId: draft.sourceId,
+    sourceId: draft.id,
     name: draft.file.name,
     center: String(draft.customMetadata.center ?? ''),
     classification: String(draft.customMetadata.document_type ?? ''),

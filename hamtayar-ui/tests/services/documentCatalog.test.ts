@@ -9,9 +9,7 @@ afterEach(() => operationManager.logout());
 function draft(file: File): DocumentDraft {
   return {
     id: 'draft',
-    sourceId: 'source',
     file,
-    knowledgeSpaceId: 'demo-documents',
     version: '1',
     processingProfile: 'default',
     customMetadata: { center: ' مرکز الف ', document_type: 'normal' },
@@ -23,6 +21,7 @@ it('reads actual UTF-8 text and replaces an explicit retry by source identity', 
     new AbortController().signal,
   );
   expect(local.text).toBe('مدیریت دانش');
+  expect(local.sourceId).toBe('draft');
   documentCatalog.register(local);
   documentCatalog.register({ ...local, center: 'مرکز ب' });
   expect(documentCatalog.get().documents).toHaveLength(1);

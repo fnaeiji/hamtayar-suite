@@ -6,6 +6,9 @@ import type {
 import { validateFixedFields } from '../../../features/documents/documentsService';
 import { requestJson } from '../httpClient';
 type Config = ServicesConfig['hamtayar'];
+// The inspected ingestion endpoint still requires these transport identifiers.
+// Keep them out of the editable form/preview; this demo namespace grants no access.
+const DEMO_DOCUMENT_SPACE = 'demo-documents';
 function fail(kind: 'blocked' | 'invalid_response'): never {
   throw Object.assign(new Error(kind), { kind });
 }
@@ -23,14 +26,15 @@ export async function ingestDocument(
     !config.uploadLimitVerified ||
     !config.maxUploadBytes ||
     draft.file.size > config.maxUploadBytes ||
-    validateFixedFields(draft)
+    validateFixedFields(draft) ||
+    !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(draft.id)
   )
     fail('blocked');
   if (Object.keys(draft.customMetadata).length && !reducedConfirmed) fail('blocked');
   const form = new FormData();
   form.append('file', draft.file);
-  form.append('source_id', draft.sourceId);
-  form.append('knowledge_space_id', draft.knowledgeSpaceId);
+  form.append('source_id', draft.id);
+  form.append('knowledge_space_id', DEMO_DOCUMENT_SPACE);
   form.append('version', draft.version);
   form.append('processing_profile', draft.processingProfile);
   const r = await requestJson<unknown>(

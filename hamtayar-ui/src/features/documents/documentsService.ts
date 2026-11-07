@@ -16,10 +16,8 @@ export function validateDocumentFile(
   }
 }
 export function validateFixedFields(draft: DocumentDraft): string | undefined {
-  for (const value of [draft.sourceId, draft.knowledgeSpaceId, draft.version]) {
-    if (value.length > 128 || !/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value))
-      return 'شناسه منبع، فضای دانشی و نسخه باید شناسه انگلیسی معتبر (حداکثر ۱۲۸ نویسه) باشند.';
-  }
+  if (draft.version.length > 128 || !/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(draft.version))
+    return 'نسخه باید شناسه انگلیسی معتبر (حداکثر ۱۲۸ نویسه) باشد.';
   if (
     draft.processingProfile.length > 64 ||
     !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(draft.processingProfile)

@@ -518,6 +518,9 @@ input::file-selector-button {
   margin-inline-end: 12px;
   cursor: pointer;
 }
+.document-card p {
+  overflow-wrap: anywhere;
+}
 .document-card h2 {
   font-size: 17px;
 }

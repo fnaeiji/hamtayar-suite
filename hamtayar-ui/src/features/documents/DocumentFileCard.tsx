@@ -24,10 +24,16 @@ export function DocumentFileCard({
       <fieldset disabled={disabled}>
         <legend>مشخصات سند</legend>
         <div className="form-grid">
+          <label>
+            نام فایل
+            <input dir="auto" value={draft.file.name} readOnly />
+          </label>
+          <label>
+            اندازه فایل
+            <input value={`${draft.file.size} بایت`} readOnly />
+          </label>
           {(
             [
-              ['sourceId', 'شناسه منبع'],
-              ['knowledgeSpaceId', 'فضای دانشی'],
               ['version', 'نسخه'],
               ['processingProfile', 'پروفایل پردازش'],
             ] as const

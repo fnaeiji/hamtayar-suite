@@ -11,7 +11,8 @@ const config = {
   uploadLimitVerified: true,
 };
 afterEach(() => vi.restoreAllMocks());
-it('maps exactly fixed multipart fields and preserves null chunk counts', async () => {
+it('sends the actual File with automatic API identifiers and preserves null chunk counts', async () => {
+  const file = new File(['actual file contents'], 'a.txt', { type: 'text/plain' });
   const spy = vi.spyOn(window, 'fetch').mockResolvedValue(
     new Response(
       JSON.stringify({
@@ -25,12 +26,10 @@ it('maps exactly fixed multipart fields and preserves null chunk counts', async 
   const result = await ingestDocument(
     {
       id: '1',
-      file: new File(['x'], 'a.txt'),
-      sourceId: 'source',
-      knowledgeSpaceId: 'space',
+      file,
       version: '1',
       processingProfile: 'default',
-      customMetadata: { project: 'alpha' },
+      customMetadata: { center: 'alpha' },
     },
     true,
     undefined,
@@ -40,6 +39,17 @@ it('maps exactly fixed multipart fields and preserves null chunk counts', async 
   expect([...form.keys()].sort()).toEqual(
     ['file', 'source_id', 'knowledge_space_id', 'version', 'processing_profile'].sort(),
   );
+  expect(form.get('file')).toBe(file);
+  expect(form.get('source_id')).toBe('1');
+  expect(form.get('knowledge_space_id')).toBe('demo-documents');
+  const uploaded = form.get('file') as File;
+  const contents = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsText(uploaded);
+  });
+  expect(contents).toBe('actual file contents');
   expect(result.chunksIndexed).toBeNull();
   expect(result.requestId).toBeUndefined();
 });
@@ -59,11 +69,9 @@ it('requires explicit metadata reduction and sends question only', async () => {
       {
         id: '1',
         file: new File(['x'], 'a.txt'),
-        sourceId: 's',
-        knowledgeSpaceId: 'k',
         version: '1',
         processingProfile: 'default',
-        customMetadata: { project: 'p' },
+        customMetadata: { center: 'p' },
       },
       false,
       undefined,

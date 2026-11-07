@@ -143,6 +143,38 @@ mkdirSync(screenshots, { recursive: true });
     });
     await page.getByRole('textbox', { name: /^مرکز/ }).fill('مرکز فناوری');
     await page.getByRole('combobox', { name: /نوع سند/ }).selectOption('confidential');
+    const card = page.getByRole('article', { name: 'guide.txt' });
+    if ((await card.getByLabel('نام فایل', { exact: true }).inputValue()) !== 'guide.txt')
+      throw Error('Missing file name facts');
+    if (
+      (await card.getByLabel('شناسه منبع', { exact: true }).count()) ||
+      (await card.getByLabel('فضای دانشی', { exact: true }).count())
+    )
+      throw Error('Obsolete editable identifiers remain');
+    await page.getByRole('button', { name: 'پیش‌نمایش درخواست', exact: true }).click();
+    const documentPreview = page.getByRole('region', { name: 'پیش‌نمایش درخواست‌ها' });
+    const selectedRequest = JSON.parse(
+      await documentPreview.locator('pre').textContent(),
+    )[0];
+    if (
+      'sourceId' in selectedRequest ||
+      'knowledgeSpaceId' in selectedRequest ||
+      selectedRequest.file.name !== 'guide.txt' ||
+      !selectedRequest.file.size
+    )
+      throw Error('Document preview mismatch');
+    await inspect('documents-desktop');
+    await page.screenshot({
+      path: resolve(screenshots, 'unified-documents.png'),
+      fullPage: true,
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await inspect('documents-mobile');
+    await page.screenshot({
+      path: resolve(screenshots, 'unified-documents-mobile.png'),
+      fullPage: true,
+    });
+    await page.setViewportSize({ width: 1366, height: 768 });
     await page.getByRole('button', { name: 'پردازش', exact: true }).click();
     await page.getByText('نتیجه نمایشی؛ داده در بک‌اند ثبت نمی‌شود').waitFor();
     await page

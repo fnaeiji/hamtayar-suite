@@ -2,8 +2,6 @@ import type { MetadataValues } from '../../types/metadata';
 export type DocumentDraft = {
   id: string;
   file: File;
-  sourceId: string;
-  knowledgeSpaceId: string;
   version: string;
   processingProfile: string;
   customMetadata: MetadataValues;

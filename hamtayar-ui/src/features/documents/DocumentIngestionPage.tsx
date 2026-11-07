@@ -46,8 +46,6 @@ export function DocumentIngestionPage() {
       drafts.push({
         id: crypto.randomUUID(),
         file,
-        sourceId: crypto.randomUUID(),
-        knowledgeSpaceId: 'demo-documents',
         version: '1',
         processingProfile: 'default',
         customMetadata: {},
@@ -191,20 +189,16 @@ export function DocumentIngestionPage() {
       </div>
       {state.preview && (
         <section role="region" aria-label="پیش‌نمایش درخواست‌ها">
+          <p className="notice">
+            {mode === 'demo'
+              ? 'پیش‌نمایش اطلاعات انتخابی؛ در حالت نمایشی هیچ فایلی به سرور ارسال نمی‌شود.'
+              : 'این JSON مشخصات فایل است؛ در اتصال فعال API، خود فایل در بخش file از multipart/form-data ارسال می‌شود. شناسه‌های داخلی قرارداد فعلی سرویس خودکار افزوده می‌شوند.'}
+          </p>
           <pre dir="ltr">
             {JSON.stringify(
               activeDrafts.map(
-                ({
-                  file,
-                  sourceId,
-                  knowledgeSpaceId,
-                  version,
-                  processingProfile,
-                  customMetadata,
-                }) => ({
+                ({ file, version, processingProfile, customMetadata }) => ({
                   file: { name: file.name, size: file.size },
-                  sourceId,
-                  knowledgeSpaceId,
                   version,
                   processingProfile,
                   customMetadata,

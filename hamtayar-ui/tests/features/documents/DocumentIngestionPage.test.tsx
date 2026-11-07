@@ -97,23 +97,47 @@ describe('document ingestion Demo flow', () => {
     );
   });
 
-  it('previews and clears intended request data', async () => {
+  it('shows read-only file facts instead of identifiers and previews only user-facing request data', async () => {
     const user = userEvent.setup();
+    const fetchSpy = vi.spyOn(window, 'fetch');
     renderPage();
-    const picker = await screen.findByLabelText('انتخاب اسناد');
-    await user.upload(picker, file());
-    const space = within(
-      screen.getByRole('article', { name: 'handbook.pdf' }),
-    ).getByLabelText('فضای دانشی');
-    await user.clear(space);
-    await user.type(space, 'manuals');
+    const selected = file(
+      '14050804-طرح درس SDD.docx',
+      128097,
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    );
+    await user.upload(screen.getByLabelText('انتخاب اسناد'), selected);
+    const card = within(screen.getByRole('article', { name: selected.name }));
+    expect(card.queryByLabelText('شناسه منبع')).not.toBeInTheDocument();
+    expect(card.queryByLabelText('فضای دانشی')).not.toBeInTheDocument();
+    expect(card.getByLabelText('نام فایل')).toHaveValue(selected.name);
+    expect(card.getByLabelText('نام فایل')).toHaveAttribute('readonly');
+    expect(card.getByLabelText('اندازه فایل')).toHaveValue('128097 بایت');
+    expect(card.getByLabelText('اندازه فایل')).toHaveAttribute('readonly');
+    await user.type(card.getByRole('textbox', { name: /^مرکز/ }), 'همتا');
+    await user.selectOptions(card.getByRole('combobox', { name: /نوع سند/ }), 'normal');
+    await user.clear(card.getByLabelText('نسخه'));
+    await user.type(card.getByLabelText('نسخه'), '2');
     await user.click(screen.getByRole('button', { name: 'پیش‌نمایش درخواست' }));
-
-    expect(
-      await screen.findByRole('region', { name: 'پیش‌نمایش درخواست‌ها' }),
-    ).toHaveTextContent('manuals');
+    const region = screen.getByRole('region', { name: 'پیش‌نمایش درخواست‌ها' });
+    expect(JSON.parse(region.querySelector('pre')!.textContent!)).toEqual([
+      {
+        file: { name: selected.name, size: 128097 },
+        version: '2',
+        processingProfile: 'default',
+        customMetadata: { center: 'همتا', document_type: 'normal' },
+      },
+    ]);
+    expect(region).not.toHaveTextContent(
+      /sourceId|knowledgeSpaceId|source_id|knowledge_space_id/,
+    );
+    expect(region).toHaveTextContent('هیچ فایلی به سرور ارسال نمی‌شود');
+    expect(fetchSpy).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', { name: 'پاک کردن' }));
-    expect(screen.queryByText('handbook.pdf')).not.toBeInTheDocument();
+    expect(screen.queryByRole('article')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('region', { name: 'پیش‌نمایش درخواست‌ها' }),
+    ).not.toBeInTheDocument();
   });
 
   it('keeps per-file outcomes independent when one Demo operation fails', async () => {
