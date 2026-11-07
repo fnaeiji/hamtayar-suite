@@ -40,17 +40,27 @@ function OperationHarness() {
         result: 'stale',
       }),
     );
-    operationManager.update(replacement.id, replacement.generation, { status: 'pending' });
+    operationManager.update(replacement.id, replacement.generation, {
+      status: 'pending',
+    });
   }
 
   return (
     <section>
       <p>حالت فعلی: {mode === 'demo' ? 'نمایشی' : 'API'}</p>
       <p>عملیات: {operation?.status ?? 'بدون عملیات'}</p>
-      <button onClick={() => navigate('/codebase')} type="button">رفتن به پایگاه کد</button>
-      <button onClick={() => navigate('/')} type="button">بازگشت به نمای کلی</button>
-      <button onClick={startPending} type="button">شروع عملیات معلق</button>
-      <button onClick={startReplacement} type="button">آغاز نسل تازه</button>
+      <button onClick={() => navigate('/codebase')} type="button">
+        رفتن به همتایار کد
+      </button>
+      <button onClick={() => navigate('/')} type="button">
+        بازگشت به نمای کلی
+      </button>
+      <button onClick={startPending} type="button">
+        شروع عملیات معلق
+      </button>
+      <button onClick={startReplacement} type="button">
+        آغاز نسل تازه
+      </button>
       <button disabled={!canSwitchMode} onClick={() => switchMode('api')} type="button">
         تغییر به API
       </button>
@@ -81,9 +91,13 @@ describe('demo login and navigation flow', () => {
     await user.type(screen.getByLabelText('گذرواژه'), 'Hamtayar123!');
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
 
-    expect(await screen.findByRole('heading', { name: 'به دموی همتایار خوش آمدید' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'به دموی همتایار خوش آمدید' }),
+    ).toBeVisible();
     expect(screen.getByText('محیط آزمایشی')).toBeVisible();
-    expect(window.sessionStorage.getItem('hamtayar-demo-ui.session.v1')).not.toContain('Hamtayar123!');
+    expect(window.sessionStorage.getItem('hamtayar-demo-ui.session.v1')).not.toContain(
+      'Hamtayar123!',
+    );
   });
 
   it('rejects invalid credentials without leaving login', async () => {
@@ -94,7 +108,9 @@ describe('demo login and navigation flow', () => {
     await user.type(screen.getByLabelText('گذرواژه'), 'wrong');
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('نام کاربری یا گذرواژه نادرست است');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'نام کاربری یا گذرواژه نادرست است',
+    );
     expect(screen.getByRole('heading', { name: 'ورود به دموی همتایار' })).toBeVisible();
     expect(window.sessionStorage.getItem('hamtayar-demo-ui.session.v1')).toBeNull();
   });
@@ -102,16 +118,22 @@ describe('demo login and navigation flow', () => {
   it('guards workspace routes and preserves the tab session after remount', async () => {
     const user = userEvent.setup();
     const firstRender = renderApp('/documents');
-    expect(await screen.findByRole('heading', { name: 'ورود به دموی همتایار' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'ورود به دموی همتایار' }),
+    ).toBeVisible();
 
     await user.type(screen.getByLabelText('نام کاربری'), 'demo');
     await user.type(screen.getByLabelText('گذرواژه'), 'Hamtayar123!');
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
-    expect(await screen.findByRole('heading', { name: 'ورود اسناد' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'پردازش اسناد سازمانی' }),
+    ).toBeVisible();
     firstRender.unmount();
 
     renderApp('/documents');
-    expect(await screen.findByRole('heading', { name: 'ورود اسناد' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'پردازش اسناد سازمانی' }),
+    ).toBeVisible();
   });
 
   it('navigates every workspace and shows the active mode', async () => {
@@ -122,14 +144,18 @@ describe('demo login and navigation flow', () => {
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
 
     expect(screen.getByLabelText('حالت اجرا')).toHaveValue('demo');
+    expect(screen.getByRole('link', { name: 'پردازش کدبیس' })).toHaveAttribute(
+      'href',
+      '/codebase/dashboard',
+    );
+    expect(screen.queryByRole('link', { name: 'تنظیم فراداده' })).not.toBeInTheDocument();
     for (const [linkName, heading] of [
-      ['پایگاه کد', 'پایگاه کد'],
-      ['ورود اسناد', 'ورود اسناد'],
+      ['پردازش اسناد سازمانی', 'پردازش اسناد سازمانی'],
       ['پرسش‌وپاسخ', 'پرسش‌وپاسخ'],
-      ['تنظیم فراداده', 'تنظیم فراداده'],
-      ['نمای کلی', 'به دموی همتایار خوش آمدید'],
+      ['جستجو عبارت در اسناد سازمانی', 'جستجو عبارت در اسناد سازمانی'],
+      ['داشبورد', 'به دموی همتایار خوش آمدید'],
     ]) {
-      await user.click(screen.getByRole('link', { name: new RegExp(linkName) }));
+      await user.click(screen.getByRole('link', { name: linkName, exact: true }));
       expect(await screen.findByRole('heading', { name: heading })).toBeVisible();
     }
   });
@@ -147,7 +173,9 @@ describe('demo login and navigation flow', () => {
     await user.click(screen.getByRole('button', { name: 'ورود به محیط آزمایشی' }));
     await user.click(screen.getByRole('button', { name: 'خروج' }));
 
-    expect(await screen.findByRole('heading', { name: 'ورود به دموی همتایار' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'ورود به دموی همتایار' }),
+    ).toBeVisible();
     expect(window.sessionStorage.getItem('hamtayar-demo-ui.session.v1')).toBeNull();
     expect(operationManager.getSnapshot()).toHaveLength(0);
     expect(stopObserver).toHaveBeenCalledTimes(1);
@@ -163,8 +191,8 @@ describe('demo login and navigation flow', () => {
     expect(screen.getByText('عملیات: pending')).toBeVisible();
     expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toBeDisabled();
 
-    await user.click(screen.getByRole('button', { name: 'رفتن به پایگاه کد' }));
-    expect(await screen.findByRole('heading', { name: 'پایگاه کد' })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'رفتن به همتایار کد' }));
+    expect(await screen.findByRole('heading', { name: 'پردازش کدبیس' })).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'بازگشت به نمای کلی' }));
     expect(screen.getByText('عملیات: pending')).toBeVisible();
 
@@ -183,7 +211,9 @@ describe('demo login and navigation flow', () => {
     const pending = operationManager.get('flow-test');
     expect(pending).toBeDefined();
     operationManager.update('flow-test', pending!.generation, { status: 'completed' });
-    await waitFor(() => expect(screen.getByRole('button', { name: 'تغییر به API' })).toBeEnabled());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'تغییر به API' })).toBeEnabled(),
+    );
     await user.selectOptions(screen.getByRole('combobox', { name: 'حالت اجرا' }), 'api');
     expect(screen.getByRole('combobox', { name: 'حالت اجرا' })).toHaveValue('api');
     expect(screen.getByText('حالت فعلی: API')).toBeVisible();

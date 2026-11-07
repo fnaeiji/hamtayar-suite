@@ -1,4 +1,12 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { ModeSelector } from '../../../src/components/common/ModeSelector';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
@@ -14,6 +22,7 @@ function file(name = 'handbook.pdf', size = 12, type = 'application/pdf') {
 function renderPage() {
   return render(
     <ModeProvider>
+      <ModeSelector />
       <MemoryRouter>
         <DocumentIngestionPage />
       </MemoryRouter>
@@ -42,8 +51,12 @@ describe('document ingestion Demo flow', () => {
     expect(screen.getByText(/25 بایت/)).toBeVisible();
 
     const dropZone = screen.getByRole('region', { name: 'انتخاب یا رها کردن اسناد' });
-    fireEvent.drop(dropZone, { dataTransfer: { files: [file('bad.exe', 10, 'application/octet-stream')] } });
-    expect(await screen.findByRole('alert')).toHaveTextContent(/قالب این فایل پشتیبانی نمی‌شود/);
+    fireEvent.drop(dropZone, {
+      dataTransfer: { files: [file('bad.exe', 10, 'application/octet-stream')] },
+    });
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /قالب این فایل پشتیبانی نمی‌شود/,
+    );
     expect(screen.queryByText('bad.exe')).not.toBeInTheDocument();
   });
 
@@ -51,43 +64,80 @@ describe('document ingestion Demo flow', () => {
     const user = userEvent.setup();
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
-    await user.upload(picker, [file('large.txt', 3_000_000, 'text/plain'), file('notes.md')]);
+    await user.upload(picker, [
+      file('large.txt', 3_000_000, 'text/plain'),
+      file('notes.md'),
+    ]);
 
     expect(await screen.findByText('large.txt')).toBeVisible();
     expect(screen.getByText('notes.md')).toBeVisible();
   });
 
-  it('supports per-file fixed metadata and shared custom values with per-file overrides', async () => {
+  it('shows metadata only on each file card and keeps centers independent', async () => {
     const user = userEvent.setup();
     renderPage();
-    const picker = await screen.findByLabelText('انتخاب اسناد');
-    await user.upload(picker, [file('one.pdf'), file('two.pdf')]);
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
-    await user.type(screen.getByLabelText('پروژه مشترک'), 'alpha');
-
-    const firstCard = screen.getByRole('article', { name: 'one.pdf' });
-    const secondCard = screen.getByRole('article', { name: 'two.pdf' });
-    expect(within(firstCard).getByLabelText('شناسه منبع')).toHaveValue(expect.stringMatching(/.+/));
-    expect(within(firstCard).getByLabelText('فضای دانشی')).toHaveValue('team-docs');
-    expect(within(secondCard).getByLabelText('پروژه')).toHaveValue('alpha');
-
-    await user.clear(within(secondCard).getByLabelText('پروژه'));
-    await user.type(within(secondCard).getByLabelText('پروژه'), 'beta');
-    expect(within(firstCard).getByLabelText('پروژه')).toHaveValue('alpha');
-    expect(within(secondCard).getByLabelText('پروژه')).toHaveValue('beta');
+    expect(
+      screen.queryByText('مقادیر مشترک؛ هر سند قابل ویرایش است'),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('مرکز مشترک')).not.toBeInTheDocument();
+    await user.upload(screen.getByLabelText('انتخاب اسناد'), [
+      file('one.pdf'),
+      file('two.pdf'),
+    ]);
+    const first = within(screen.getByRole('article', { name: 'one.pdf' }));
+    const second = within(screen.getByRole('article', { name: 'two.pdf' }));
+    await user.type(first.getByRole('textbox', { name: /^مرکز/ }), 'alpha');
+    await user.type(second.getByRole('textbox', { name: /^مرکز/ }), 'beta');
+    expect(first.getByRole('textbox', { name: /^مرکز/ })).toHaveValue('alpha');
+    expect(second.getByRole('textbox', { name: /^مرکز/ })).toHaveValue('beta');
+    expect(first.getByRole('combobox', { name: /نوع سند/ })).toHaveTextContent('عادی');
+    expect(first.getByRole('combobox', { name: /نوع سند/ })).toHaveTextContent('محرمانه');
+    expect(first.getByRole('combobox', { name: /نوع سند/ })).toHaveTextContent(
+      'خیلی محرمانه',
+    );
   });
 
-  it('previews and clears intended request data', async () => {
+  it('shows read-only file facts instead of identifiers and previews only user-facing request data', async () => {
     const user = userEvent.setup();
+    const fetchSpy = vi.spyOn(window, 'fetch');
     renderPage();
-    const picker = await screen.findByLabelText('انتخاب اسناد');
-    await user.upload(picker, file());
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'manuals');
+    const selected = file(
+      '14050804-طرح درس SDD.docx',
+      128097,
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    );
+    await user.upload(screen.getByLabelText('انتخاب اسناد'), selected);
+    const card = within(screen.getByRole('article', { name: selected.name }));
+    expect(card.queryByLabelText('شناسه منبع')).not.toBeInTheDocument();
+    expect(card.queryByLabelText('فضای دانشی')).not.toBeInTheDocument();
+    expect(card.getByLabelText('نام فایل')).toHaveValue(selected.name);
+    expect(card.getByLabelText('نام فایل')).toHaveAttribute('readonly');
+    expect(card.getByLabelText('اندازه فایل')).toHaveValue('128097 بایت');
+    expect(card.getByLabelText('اندازه فایل')).toHaveAttribute('readonly');
+    await user.type(card.getByRole('textbox', { name: /^مرکز/ }), 'همتا');
+    await user.selectOptions(card.getByRole('combobox', { name: /نوع سند/ }), 'normal');
+    await user.clear(card.getByLabelText('نسخه'));
+    await user.type(card.getByLabelText('نسخه'), '2');
     await user.click(screen.getByRole('button', { name: 'پیش‌نمایش درخواست' }));
-
-    expect(await screen.findByRole('region', { name: 'پیش‌نمایش درخواست‌ها' })).toHaveTextContent('manuals');
+    const region = screen.getByRole('region', { name: 'پیش‌نمایش درخواست‌ها' });
+    expect(JSON.parse(region.querySelector('pre')!.textContent!)).toEqual([
+      {
+        file: { name: selected.name, size: 128097 },
+        version: '2',
+        processingProfile: 'default',
+        customMetadata: { center: 'همتا', document_type: 'normal' },
+      },
+    ]);
+    expect(region).not.toHaveTextContent(
+      /sourceId|knowledgeSpaceId|source_id|knowledge_space_id/,
+    );
+    expect(region).toHaveTextContent('هیچ فایلی به سرور ارسال نمی‌شود');
+    expect(fetchSpy).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', { name: 'پاک کردن' }));
-    expect(screen.queryByText('handbook.pdf')).not.toBeInTheDocument();
+    expect(screen.queryByRole('article')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('region', { name: 'پیش‌نمایش درخواست‌ها' }),
+    ).not.toBeInTheDocument();
   });
 
   it('keeps per-file outcomes independent when one Demo operation fails', async () => {
@@ -104,12 +154,20 @@ describe('document ingestion Demo flow', () => {
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
     await user.upload(picker, [file('good.pdf'), file('bad.txt', 12, 'text/plain')]);
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
-    await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+    for (const card of screen.getAllByRole('article')) {
+      await user.type(within(card).getByRole('textbox', { name: /^مرکز/ }), 'مرکز الف');
+      await user.selectOptions(
+        within(card).getByRole('combobox', { name: /نوع سند/ }),
+        'normal',
+      );
+    }
+    await user.click(screen.getByRole('button', { name: 'پردازش' }));
 
     expect(await screen.findByText(/نتیجه نمایشی/)).toBeVisible();
     expect(screen.getByText(/نمونه این فایل با خطا روبه‌رو شد/)).toBeVisible();
-    expect(screen.getByRole('article', { name: 'good.pdf' })).toHaveTextContent('completed');
+    expect(screen.getByRole('article', { name: 'good.pdf' })).toHaveTextContent(
+      'completed',
+    );
     expect(screen.getByRole('article', { name: 'bad.txt' })).toHaveTextContent('failed');
   });
 
@@ -121,8 +179,10 @@ describe('document ingestion Demo flow', () => {
     const picker = screen.getByLabelText('انتخاب اسناد');
     await user.upload(picker, file());
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/سقف بارگذاری سرویس تأیید نشده است/);
-    expect(screen.getByRole('button', { name: 'ارسال به سرویس' })).toBeDisabled();
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /سقف بارگذاری سرویس تأیید نشده است/,
+    );
+    expect(screen.getByRole('button', { name: 'پردازش' })).toBeDisabled();
   });
 
   it('makes no operational request in Demo mode', async () => {
@@ -131,8 +191,14 @@ describe('document ingestion Demo flow', () => {
     renderPage();
     const picker = await screen.findByLabelText('انتخاب اسناد');
     await user.upload(picker, file());
-    await user.type(screen.getByLabelText('فضای دانشی مشترک'), 'team-docs');
-    await user.click(screen.getByRole('button', { name: 'اجرای نمایش' }));
+    for (const card of screen.getAllByRole('article')) {
+      await user.type(within(card).getByRole('textbox', { name: /^مرکز/ }), 'مرکز الف');
+      await user.selectOptions(
+        within(card).getByRole('combobox', { name: /نوع سند/ }),
+        'normal',
+      );
+    }
+    await user.click(screen.getByRole('button', { name: 'پردازش' }));
 
     await waitFor(() => expect(screen.getByText(/نتیجه نمایشی/)).toBeVisible());
     expect(fetchSpy).not.toHaveBeenCalled();

@@ -10,7 +10,11 @@ export type HttpRequestOptions = Omit<RequestInit, 'signal'> & {
   signal?: AbortSignal;
 };
 
-function clientError(kind: DiagnosticErrorKind, message: string, statusCode?: number): HttpClientError {
+function clientError(
+  kind: DiagnosticErrorKind,
+  message: string,
+  statusCode?: number,
+): HttpClientError {
   return Object.assign(new Error(message), { kind, statusCode });
 }
 
@@ -25,7 +29,10 @@ async function readResponse(response: Response): Promise<unknown> {
   }
 }
 
-export async function requestJson<T>(url: string, options: HttpRequestOptions = {}): Promise<T> {
+export async function requestJson<T>(
+  url: string,
+  options: HttpRequestOptions = {},
+): Promise<T> {
   const { timeoutMs = 30_000, signal: callerSignal, ...init } = options;
   const controller = new AbortController();
   let timedOut = false;
@@ -51,13 +58,20 @@ export async function requestJson<T>(url: string, options: HttpRequestOptions = 
     });
     const body = await readResponse(response);
     if (!response.ok) {
-      throw clientError('http', 'The service returned an unsuccessful response.', response.status);
+      throw clientError(
+        'http',
+        'The service returned an unsuccessful response.',
+        response.status,
+      );
     }
     return body as T;
   } catch (error) {
     if ((error as HttpClientError)?.kind) throw error;
     if (timedOut) {
-      throw clientError('timeout', 'The request timed out; the service outcome may be uncertain.');
+      throw clientError(
+        'timeout',
+        'The request timed out; the service outcome may be uncertain.',
+      );
     }
     if (externallyAborted) {
       throw clientError(

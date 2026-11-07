@@ -1,0 +1,206 @@
+import { useMode } from '../../app/ModeProvider';
+import { MetadataFields } from '../../components/metadata/MetadataFields';
+import { SafeAnswerMarkdown } from '../../components/answers/SafeAnswerMarkdown';
+import { TestDetailsPanel } from '../../components/operations/TestDetailsPanel';
+import { documentCatalog } from '../../services/documentCatalog';
+import { questionMetadataDefinitions } from '../../config/demoProfile';
+import { createWorkspaceStore } from '../../services/operations/workspaceStore';
+import { runOperation, useOperation } from '../../services/operations/operationService';
+import {
+  hamtayarReadiness,
+  type AnswerResult,
+} from '../../services/api/adapters/hamtayarAdapter';
+import type { MetadataValues } from '../../types/metadata';
+import { buildQuery, type QueryModel } from './queryModel';
+import { qaService } from './qaService';
+const store = createWorkspaceStore(() => ({
+  question: '',
+  user: {} as MetadataValues,
+  filters: {} as MetadataValues,
+  error: '',
+  preview: undefined as QueryModel | undefined,
+  confirmed: false,
+  history: [] as { question: string; result: AnswerResult; mode: string }[],
+}));
+export function QAPage() {
+  const state = store.use();
+  const { mode, canSwitchMode } = useMode();
+  const { centers } = documentCatalog.use();
+  const definitions = questionMetadataDefinitions(centers);
+  const op = useOperation<AnswerResult>('qa');
+  const gate = hamtayarReadiness('qa');
+  function query() {
+    const q = state.question.trim();
+    if (!q || q.includes('\0')) throw new Error('پرسش معتبر و غیرخالی وارد کنید.');
+    if (mode === 'api' && Array.from(q).length > 4096)
+      throw new Error('پرسش API باید حداکثر ۴۰۹۶ نویسه باشد.');
+    return buildQuery(
+      q,
+      state.user,
+      {
+        center: state.filters.center ?? '',
+        document_type: state.user.person_access_level ?? '',
+      },
+      definitions,
+    );
+  }
+  function preview() {
+    try {
+      store.set({ preview: query(), error: '' });
+    } catch (error) {
+      store.set({ error: (error as Error).message });
+    }
+  }
+  async function submit() {
+    if (!canSwitchMode || (mode === 'api' && (!gate.ready || !state.confirmed))) return;
+    try {
+      const intended = query();
+      store.set({ preview: intended, error: '' });
+      const result = await runOperation('qa', mode, (signal) =>
+        mode === 'demo'
+          ? qaService.runDemo()
+          : qaService.runApi(intended.question, signal),
+      );
+      if (result)
+        store.set({
+          history: [
+            ...store.get().history,
+            { question: intended.question, result, mode },
+          ],
+        });
+    } catch (error) {
+      store.set({ error: (error as Error).message });
+    }
+  }
+  return (
+    <section className="page-content">
+      <p className="eyebrow">جست‌وجو در دانش</p>
+      <h1>پرسش‌وپاسخ</h1>
+      <p className="notice">
+        {mode === 'demo'
+          ? 'پاسخ و منابع ثابت و نمایشی هستند؛ فیلترها و اطلاعات کاربر روی نتیجه نمونه اعمال نمی‌شوند.'
+          : 'فقط سؤال ارسال می‌شود؛ پاسخ غیرشخصی‌سازی‌شده و بدون فیلتر است.'}
+      </p>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void submit();
+        }}
+      >
+        <fieldset disabled={!canSwitchMode}>
+          <legend>پرسش شما</legend>
+          <label htmlFor="question">پرسش شما</label>
+          <textarea
+            id="question"
+            rows={4}
+            value={state.question}
+            onChange={(e) => store.set({ question: e.target.value, preview: undefined })}
+            aria-describedby={state.error ? 'qa-error' : undefined}
+          />
+          <h2>مرکز و سطح دسترسی</h2>
+          <p>
+            مراکزِ دارای ثبت موفق در همین نشست نمایشی قابل انتخاب‌اند. سطح دسترسی انتخابی
+            معادل نوع سند در پیش‌نمایش است؛ مجوز واقعی ایجاد نمی‌کند.
+          </p>
+          {centers.length === 0 && (
+            <p role="status">
+              هنوز سندی برای هیچ مرکزی ثبت نشده است. ابتدا یک سند را با مرکز و نوع سند در
+              بخش اسناد ثبت نمایشی کنید.
+            </p>
+          )}
+          <MetadataFields
+            definitions={definitions.filter((f) => f.key === 'center')}
+            group="document"
+            values={state.filters}
+            onChange={(key, value) =>
+              store.set({ filters: { [key]: value }, preview: undefined })
+            }
+          />
+          <MetadataFields
+            definitions={definitions}
+            group="user"
+            values={state.user}
+            onChange={(key, value) =>
+              store.set({ user: { [key]: value }, preview: undefined })
+            }
+          />
+          {mode === 'api' && (
+            <label>
+              <input
+                type="checkbox"
+                checked={state.confirmed}
+                onChange={(e) => store.set({ confirmed: e.target.checked })}
+              />
+              آزمون فقط سؤال، بدون فیلتر و اطلاعات توصیفی را تأیید می‌کنم.
+            </label>
+          )}
+        </fieldset>
+        {state.error && (
+          <p role="alert" id="qa-error">
+            {state.error}
+          </p>
+        )}
+        {mode === 'api' && <p role="status">{gate.reason}</p>}
+        <div className="actions">
+          <button
+            className="button"
+            type="submit"
+            disabled={
+              !canSwitchMode || (mode === 'api' && (!gate.ready || !state.confirmed))
+            }
+          >
+            پاسخ
+          </button>
+          <button className="button button--quiet" type="button" onClick={preview}>
+            پیش‌نمایش پرسش
+          </button>
+        </div>
+      </form>
+      {op?.status === 'pending' && <p role="status">در انتظار پاسخ…</p>}
+      {op?.diagnostic && <p role="alert">{op.diagnostic.message}</p>}
+      {op?.result && (
+        <article className="workspace-card">
+          <h2>{op.mode === 'demo' ? 'پاسخ نمونه' : 'پاسخ واقعی سرویس'}</h2>
+          {op.result.status === 'no_evidence' && <p>شواهد کافی پیدا نشد.</p>}
+          <SafeAnswerMarkdown text={op.result.answer} />
+          <h3>{op.mode === 'demo' ? 'منابع نمونه' : 'منابع پاسخ'}</h3>
+          <ul>
+            {op.result.citations.map((c, i) => (
+              <li key={`${c.sourceId}-${i}`}>
+                {c.title}{' '}
+                <bdi>
+                  {c.sourceId} · {c.version}
+                </bdi>
+              </li>
+            ))}
+          </ul>
+        </article>
+      )}
+      {state.history.length > 1 && (
+        <section>
+          <h2>پرسش‌های قبلی این نشست</h2>
+          <p>
+            تاریخچه فقط در حافظه مرورگر است؛ مکالمه چندمرحله‌ای به سرویس ارسال نمی‌شود.
+          </p>
+          {state.history.slice(0, -1).map((entry, index) => (
+            <details key={index}>
+              <summary>
+                {entry.question} · {entry.mode === 'demo' ? 'نمایشی' : 'API'}
+              </summary>
+              <SafeAnswerMarkdown text={entry.result.answer} />
+            </details>
+          ))}
+        </section>
+      )}
+      <TestDetailsPanel
+        intended={state.preview}
+        transmitted={
+          op?.mode === 'api' && state.preview
+            ? { question: state.preview.question }
+            : undefined
+        }
+        operation={op}
+      />
+    </section>
+  );
+}

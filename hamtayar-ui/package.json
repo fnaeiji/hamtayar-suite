@@ -11,9 +11,13 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:browser": "node tests/browser/unified-smoke.mjs"
   },
   "dependencies": {
+    "@fontsource/vazirmatn": "5.3.0",
+    "cytoscape": "3.30.4",
+    "lucide-react": "0.468.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-markdown": "^10.1.0",
@@ -32,6 +36,7 @@
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.4.0",
     "jsdom": "^26.1.0",
+    "playwright": "1.51.1",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.0",

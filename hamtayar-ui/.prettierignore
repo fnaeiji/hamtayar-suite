@@ -9,3 +9,9 @@ pnpm-lock.yaml
 *.log
 .env*
 !.env.example
+# Spec Kit generated governance and reference artifacts retain their upstream formatting.
+.specify/
+.agents/
+.github/
+prd/
+specs/

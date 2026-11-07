@@ -15,7 +15,9 @@ export function ModeSelector() {
         <option value="demo">نمایشی</option>
         <option value="api">API</option>
       </select>
-      {!canSwitchMode && <span className="mode-selector__hint">تا پایان عملیات قفل است</span>}
+      {!canSwitchMode && (
+        <span className="mode-selector__hint">تا پایان عملیات قفل است</span>
+      )}
     </label>
   );
 }

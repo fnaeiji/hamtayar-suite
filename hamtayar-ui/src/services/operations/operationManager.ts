@@ -53,7 +53,11 @@ class OperationManager {
     return record;
   }
 
-  update<TResult>(id: string, generation: number, update: OperationUpdate<TResult>): boolean {
+  update<TResult>(
+    id: string,
+    generation: number,
+    update: OperationUpdate<TResult>,
+  ): boolean {
     const current = this.records.get(id);
     if (!current || current.generation !== generation) return false;
     if (update.status && !this.canTransition(current.status, update.status)) return false;
@@ -78,7 +82,7 @@ class OperationManager {
   }
 
   clearTransient(): void {
-    this.runCleanups(this.transientCleanups);
+    for (const cleanup of this.transientCleanups) cleanup();
     for (const [id, record] of this.records) {
       if (record.status === 'pending') continue;
       this.cleanOperation(id);
@@ -93,14 +97,13 @@ class OperationManager {
       this.generations.set(id, record.generation + 1);
     }
     this.records.clear();
-    this.runCleanups(this.transientCleanups);
+    for (const cleanup of this.transientCleanups) cleanup();
     this.emit();
   }
 
   private canTransition(from: OperationStatus, to: OperationStatus): boolean {
     if (from === to) return true;
     const allowed: Record<OperationStatus, OperationStatus[]> = {
-      idle: ['validating'],
       validating: ['pending', 'failed'],
       pending: ['completed', 'failed', 'uncertain'],
       completed: ['validating'],

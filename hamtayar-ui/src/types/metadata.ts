@@ -1,37 +1,27 @@
-export type MetadataFieldType =
-  | 'text'
-  | 'number'
-  | 'boolean'
-  | 'select'
-  | 'multi_select';
-
-export type MetadataOption = {
-  value: string;
-  labelFa: string;
+type MetadataOption = { value: string; labelFa: string };
+type FieldBase = { labelFa: string; required: boolean };
+export type MetadataFieldDefinition =
+  | (FieldBase & {
+      key: 'center';
+      group: 'document';
+      type: 'text' | 'select';
+      options?: MetadataOption[];
+    })
+  | (FieldBase & {
+      key: 'document_type';
+      group: 'document';
+      type: 'select';
+      options: MetadataOption[];
+    })
+  | (FieldBase & {
+      key: 'person_access_level';
+      group: 'user';
+      type: 'select';
+      options: MetadataOption[];
+    });
+export type MetadataKey = MetadataFieldDefinition['key'];
+export type MetadataValues = Partial<Record<MetadataKey, string>>;
+export type DocumentFilters = {
+  operator: 'and';
+  conditions: { key: 'center' | 'document_type'; operator: 'eq'; value: string }[];
 };
-
-type MetadataFieldBase = {
-  /** Unique, stable English identifier used in UI models and API mappings. */
-  key: string;
-  labelFa: string;
-  type: MetadataFieldType;
-  options?: MetadataOption[];
-  required: boolean;
-  enabled: boolean;
-  visibleInForm: boolean;
-};
-
-export type DocumentMetadataField = MetadataFieldBase & {
-  group: 'document';
-  filterable: boolean;
-};
-
-export type UserMetadataField = MetadataFieldBase & {
-  group: 'user';
-  filterable?: never;
-};
-
-export type MetadataFieldDefinition = DocumentMetadataField | UserMetadataField;
-
-export type MetadataFieldValue = string | number | boolean | string[];
-export type MetadataValues = Record<string, MetadataFieldValue>;
